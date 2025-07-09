@@ -21,7 +21,7 @@ This is a MERN stack project for a Micro-Task and Earning Platform.
 ### Phase 1: Project Setup & Core Layout
 
 - [ ] **GitHub Setup:**
-  - [ ] Initialize client-side repository.
+  - [ + ] Initialize client-side repository.
   - [ ] Initialize server-side repository.
   - [ ] Aim for 20+ client-side commits and 12+ server-side commits.
 - [ ] **Environment Variables:**
