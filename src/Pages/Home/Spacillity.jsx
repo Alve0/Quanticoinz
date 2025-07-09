@@ -52,14 +52,6 @@ const specialties = [
 ];
 
 function Specialty() {
-  const handleCardClick = (name) => {
-    toast.success(`Selected ${name}!`, {
-      position: "top-right",
-      autoClose: 2000,
-      theme: "colored",
-    });
-  };
-
   return (
     <div className="bg-gray-100 p-4">
       <div className="flex flex-row flex-wrap gap-5 w-full max-w-8xl mx-auto justify-center">
