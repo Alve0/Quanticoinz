@@ -10,7 +10,7 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../../../FrontEnd/firebase";
+import auth from "../firebase";
 
 export const AuthContext = createContext();
 
@@ -20,6 +20,7 @@ const AuthProvider = ({ children }) => {
 
   // Create user
   const createUser = (email, password) => {
+    console.log("form the create user for authContex ", auth);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 

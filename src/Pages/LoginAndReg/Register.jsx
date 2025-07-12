@@ -1,8 +1,9 @@
-import React from "react";
+import React, { use } from "react";
 import regImage from "../../Assets/standard.0638957.png";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 function Register() {
   const {
@@ -11,9 +12,53 @@ function Register() {
     formState: { errors },
   } = useForm();
 
+  const { createUser, profileUpdate, user, setUser } = use(AuthContext);
+  const navigate = useNavigate();
   const onSubmit = async (data) => {
+    const imageFile = data.image[0];
+    const formData = new FormData();
+    formData.append("image", imageFile);
+
+    //image bb upload section
+    try {
+      const res = await axios.post(
+        `https://api.imgbb.com/1/upload?expiration=600&key=${
+          import.meta.env.VITE_apiKey_imagebb
+        }`,
+        formData
+      );
+      console.log("Upload successful:", res.data);
+      const imageData = res.data;
+
+      //firebase register section
+
+      try {
+        const res = await createUser(data.email, data.password);
+        console.log("User created:", res.user);
+        //profile update section
+
+        try {
+          const res = await profileUpdate(
+            data.name,
+            imageData.data.display_url
+          );
+        } catch (err) {
+          console.error("Firebase Error:", err.code, err.message);
+        }
+      } catch (err) {
+        console.error("Firebase Error:", err.code, err.message);
+      }
+    } catch (error) {
+      console.log("imagebb");
+      console.error("Upload failed:", error.response?.data || error.message);
+    }
+
     console.log(data);
   };
+
+  if (user !== null) {
+    navigate("/");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-8 px-4">
@@ -137,7 +182,7 @@ function Register() {
                 })}
                 className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               >
-                <option value="" disabled selected>
+                <option value="Select a role" disabled selected>
                   Select a role
                 </option>
                 <option value="worker">Worker</option>

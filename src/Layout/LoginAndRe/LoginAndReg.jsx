@@ -6,12 +6,6 @@ import Footer from "../../Share/NavberAndFooter/Footer";
 import { Outlet } from "react-router";
 
 function LoginAndReg() {
-  const [isLogin, setIsLogin] = useState(true);
-
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
-  };
-
   return (
     <div>
       <div>
