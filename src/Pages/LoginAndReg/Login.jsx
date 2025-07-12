@@ -1,8 +1,9 @@
-import React from "react";
+import React, { use } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import loginImage from "../../Assets/standard.0638957.png";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 function Login() {
   const {
@@ -10,16 +11,25 @@ function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
+  const navigate = useNavigate();
+  const { login, user, setUser } = use(AuthContext);
   const onSubmit = (data) => {
-    console.log("Form submitted:", data);
-    // Add your authentication logic here
+    try {
+      const res = login(data.email, data.password);
+      console.log(res);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const handleGoogleLogin = () => {
     console.log("Google login clicked");
     // Implement Google OAuth logic here
   };
+
+  if (user !== null) {
+    navigate("/");
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 p-4">
