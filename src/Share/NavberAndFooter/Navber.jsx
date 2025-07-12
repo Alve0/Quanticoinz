@@ -16,12 +16,12 @@ const Navber = () => {
               className=" rounded-full py-2 px-4 focus:outline-none ring-lime-400/40 ring-2  "
             />
           </div>
-          <Link>
+          <Link to={"/log-reg/login"}>
             <button className="btn hover:bg-lime-600 hover:text-white">
               login
             </button>
           </Link>
-          <Link>
+          <Link to={"/log-reg/register"}>
             <button className="btn bg-lime-600 text-white mr-2 ml-3">
               {" "}
               Join

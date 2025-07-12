@@ -3,6 +3,9 @@ import Error from "../Pages/Error/Error";
 
 import Root from "../Layout/Root/Root";
 import Home from "../Pages/Home/Home/Home";
+import LoginAndReg from "../Layout/LoginAndRe/LoginAndReg";
+import Login from "../Pages/LoginAndReg/Login";
+import Register from "../Pages/LoginAndReg/Register";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +16,21 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: Home,
+      },
+    ],
+  },
+  {
+    path: "/log-reg",
+    ErrorBoundary: Error,
+    Component: LoginAndReg,
+    children: [
+      {
+        path: "/log-reg/login",
+        Component: Login,
+      },
+      {
+        path: "/log-reg/register",
+        Component: Register,
       },
     ],
   },
