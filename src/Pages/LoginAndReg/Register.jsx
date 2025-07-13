@@ -5,7 +5,10 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import { AuthContext } from "../../Provider/AuthProvider";
 
+import useAxios from "../../Provider/useAxios";
+
 function Register() {
+  const useaxios = useAxios();
   const {
     register,
     handleSubmit,
@@ -14,6 +17,7 @@ function Register() {
 
   const { createUser, profileUpdate, user, setUser } = use(AuthContext);
   const navigate = useNavigate();
+
   const onSubmit = async (data) => {
     const imageFile = data.image[0];
     const formData = new FormData();
@@ -34,6 +38,7 @@ function Register() {
 
       try {
         const res = await createUser(data.email, data.password);
+
         console.log("User created:", res.user);
         //profile update section
 
@@ -53,7 +58,24 @@ function Register() {
       console.error("Upload failed:", error.response?.data || error.message);
     }
 
-    console.log(data);
+    console.log(user);
+
+    //update user to database
+
+    try {
+      const user = {
+        email: data.email,
+        role: data.role,
+        created_at: new Date().toLocaleString(),
+        last_login: new Date().toLocaleString(),
+        coin: data.role == "Worker" ? 10 : 50,
+      };
+
+      const res = await useaxios.post("/users", user);
+      console.log(res.data);
+    } catch (err) {
+      console.log("axios error : ", err);
+    }
   };
 
   if (user !== null) {

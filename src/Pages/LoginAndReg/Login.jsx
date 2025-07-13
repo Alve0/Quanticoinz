@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router";
 import { FcGoogle } from "react-icons/fc";
 import loginImage from "../../Assets/standard.0638957.png";
 import { AuthContext } from "../../Provider/AuthProvider";
+import useAxios from "../../Provider/useAxios";
+import axios from "axios";
 
 function Login() {
   const {
@@ -12,24 +14,48 @@ function Login() {
     formState: { errors },
   } = useForm();
   const navigate = useNavigate();
-  const { login, user, setUser } = use(AuthContext);
-  const onSubmit = (data) => {
+
+  const { login, user, googleLogin } = use(AuthContext);
+  const useaxios = useAxios();
+  const onSubmit = async (data) => {
     try {
-      const res = login(data.email, data.password);
-      console.log(res);
+      const res = await login(data.email, data.password);
+      console.log("Login Success:", res);
+
+      const loginUser = {
+        email: data.email,
+        last_login: new Date().toLocaleString(),
+      };
+
+      const response = await useaxios.post("/users", loginUser);
+      console.log("User updated:", response.data);
+
+      navigate("/");
     } catch (err) {
-      console.log(err);
+      console.error("Login Failed:", err.message);
     }
   };
 
-  const handleGoogleLogin = () => {
-    console.log("Google login clicked");
-    // Implement Google OAuth logic here
-  };
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await googleLogin();
+      console.log("Google Login Success:", res.user);
 
-  if (user !== null) {
-    navigate("/");
-  }
+      const loginUser = {
+        email: res.user.email,
+        created_at: new Date().toLocaleString(),
+        last_login: new Date().toLocaleString(),
+        role: "user",
+        coin: 50,
+      };
+
+      const response = await useaxios.post("/users", loginUser);
+      console.log("users saved to DB:", response.data);
+      navigate("/");
+    } catch (error) {
+      console.error("Google Login Failed:", error.message);
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-base-200 p-4">

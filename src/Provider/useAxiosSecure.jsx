@@ -1,16 +1,20 @@
 import axios from "axios";
-import React from "react";
-import useAuth from "./useAuth";
-import { useNavigate } from "react-router";
+import React, { use } from "react";
+
+import {
+  UNSAFE_createClientRoutesWithHMRRevalidationOptOut,
+  useNavigate,
+} from "react-router";
+import { AuthContext } from "./AuthProvider";
 
 const axiosSecure = axios.create({
-  baseURL: null,
+  baseURL: import.meta.env.VITE_uri,
 });
 
 const useAxiosSecure = () => {
-  const { user, logOut } = useAuth();
+  const { user, logOut } = use(AuthContext);
   const navigate = useNavigate();
-
+  console.log("user form axios", user);
   axiosSecure.interceptors.request.use(
     (config) => {
       config.headers.Authorization = `Bearer ${user.accessToken}`;
