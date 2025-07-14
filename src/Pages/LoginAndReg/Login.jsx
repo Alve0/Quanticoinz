@@ -15,7 +15,7 @@ function Login() {
   } = useForm();
   const navigate = useNavigate();
 
-  const { login, user, googleLogin } = use(AuthContext);
+  const { login, user, setUser, googleLogin } = use(AuthContext);
   const useaxios = useAxios();
   const onSubmit = async (data) => {
     try {
@@ -31,6 +31,7 @@ function Login() {
       console.log("User updated:", response.data);
 
       navigate("/");
+      setUser(res.user);
     } catch (err) {
       console.error("Login Failed:", err.message);
     }
@@ -52,6 +53,7 @@ function Login() {
       const response = await useaxios.post("/users", loginUser);
       console.log("users saved to DB:", response.data);
       navigate("/");
+      setUser(res.user);
     } catch (error) {
       console.error("Google Login Failed:", error.message);
     }

@@ -14,10 +14,10 @@ const axiosSecure = axios.create({
 const useAxiosSecure = () => {
   const { user, logOut } = use(AuthContext);
   const navigate = useNavigate();
-  console.log("user form axios", user);
+
   axiosSecure.interceptors.request.use(
     (config) => {
-      config.headers.Authorization = `Bearer ${user.accessToken}`;
+      config.headers.Authorization = `Bearer ${user?.accessToken}`;
       return config;
     },
     (error) => {

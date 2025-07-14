@@ -19,6 +19,7 @@ function Register() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    data.email = data.email.toLowerCase();
     const imageFile = data.image[0];
     const formData = new FormData();
     formData.append("image", imageFile);
@@ -41,7 +42,7 @@ function Register() {
 
         console.log("User created:", res.user);
         //profile update section
-
+        setUser(res.user);
         try {
           const res = await profileUpdate(
             data.name,
