@@ -9,3 +9,10 @@
 * {
   font-family: "Comic Neue";
 }
+.active {
+  background-color: rgb(55, 167, 55);
+  color: white;
+  padding: 5px 15px;
+
+  border-radius: 15px;
+}

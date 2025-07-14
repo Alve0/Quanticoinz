@@ -42,6 +42,7 @@ const AuthProvider = ({ children }) => {
 
   // Sign out
   const signout = () => {
+    setUser(null);
     return signOut(auth);
   };
 

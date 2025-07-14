@@ -5,7 +5,7 @@ import useAxiosSecure from "../../Provider/useAxiosSecure";
 
 import { PiCoinsFill } from "react-icons/pi";
 const Navber = () => {
-  const { user, signout } = useContext(AuthContext);
+  const { user, signout, serUser } = useContext(AuthContext);
   const axiosscure = useAxiosSecure();
   const [coin, setCoin] = useState(null);
 
@@ -13,7 +13,7 @@ const Navber = () => {
     const fetchCoin = async () => {
       try {
         if (user?.email) {
-          const res = await axiosscure.get(`/users/${user.email}`);
+          const res = await axiosscure.get(`/users/${user?.email}`);
           setCoin(res.data.coin);
           console.log(res);
         }
@@ -27,7 +27,10 @@ const Navber = () => {
 
   const handleClick = async () => {
     try {
-      await signout();
+      const res = await signout();
+      if (res) {
+        serUser(null);
+      }
     } catch (err) {
       console.log(err);
     }
@@ -87,7 +90,11 @@ const Navber = () => {
             </div>
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="m-1 rounded-full">
-                <img className="w-12" src={user?.photoURL} alt="User profile" />
+                <img
+                  className="w-12 rounded-full"
+                  src={user?.photoURL}
+                  alt="User profile"
+                />
               </div>
               <ul
                 tabIndex={0}

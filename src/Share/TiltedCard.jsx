@@ -21,6 +21,7 @@ export default function TiltedCard({
   showTooltip = true,
   overlayContent = null,
   displayOverlayContent = false,
+  fallbackBgColor = "#ffffff", // New: fallback background color
 }) {
   const ref = useRef(null);
   const x = useMotionValue(0);
@@ -29,7 +30,7 @@ export default function TiltedCard({
   const rotateY = useSpring(useMotionValue(0), springValues);
   const scale = useSpring(1, springValues);
   const opacity = useSpring(0);
-  const boxShadow = useSpring("0px 4px 8px rgba(0, 0, 0, 0.2)", springValues); // Default shadow
+  const boxShadow = useSpring("0px 4px 8px rgba(0, 0, 0, 0.2)", springValues);
   const backgroundColor = useSpring("#ffffff", springValues);
   const rotateFigcaption = useSpring(0, {
     stiffness: 350,
@@ -63,8 +64,8 @@ export default function TiltedCard({
   function handleMouseEnter() {
     scale.set(scaleOnHover);
     opacity.set(1);
-    boxShadow.set("0px 0px 20px 5px rgba(132, 204, 22, 0.7)"); // Lime glow shadow
-    backgroundColor.set("#84cc16"); // Tailwind's bg-lime-500
+    boxShadow.set("0px 0px 20px 5px rgba(132, 204, 22, 0.7)");
+    backgroundColor.set("#84cc16");
   }
 
   function handleMouseLeave() {
@@ -73,8 +74,8 @@ export default function TiltedCard({
     rotateX.set(0);
     rotateY.set(0);
     rotateFigcaption.set(0);
-    boxShadow.set("0px 4px 8px rgba(0, 0, 0, 0.2)"); // Reset to default shadow
-    backgroundColor.set("#ffffff"); // Reset to white
+    boxShadow.set("0px 4px 8px rgba(0, 0, 0, 0.2)");
+    backgroundColor.set("#ffffff");
   }
 
   return (
@@ -89,10 +90,8 @@ export default function TiltedCard({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      
-
       <motion.div
-        className="relative [transform-style:preserve-3d] flex flex-col items-center justify-center p-4 card bg-white"
+        className="relative [transform-style:preserve-3d] flex flex-col items-center justify-center p-4 card overflow-hidden"
         style={{
           width: imageWidth,
           height: imageHeight,
@@ -104,7 +103,7 @@ export default function TiltedCard({
           backgroundColor,
         }}
       >
-        {imageSrc && (
+        {imageSrc ? (
           <motion.img
             src={imageSrc}
             alt={altText}
@@ -112,6 +111,15 @@ export default function TiltedCard({
             style={{
               width: imageWidth,
               height: imageHeight,
+            }}
+          />
+        ) : (
+          <div
+            className="absolute top-0 left-0 rounded-[15px]"
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              backgroundColor: fallbackBgColor,
             }}
           />
         )}
