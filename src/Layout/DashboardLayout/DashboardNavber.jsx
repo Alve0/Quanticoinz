@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IoReorderThreeSharp } from "react-icons/io5";
-import { NavLink } from "react-router";
+import { NavLink, Outlet } from "react-router";
 import { PiCoinsFill } from "react-icons/pi";
-import { AuthContext } from "../../../Provider/AuthProvider";
-import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import { AuthContext } from "../../Provider/AuthProvider";
+import useAxiosSecure from "../../Provider/useAxiosSecure";
+import { ToastContainer } from "react-toastify";
 
 function DashboardNavber() {
   const { user } = useContext(AuthContext);
@@ -52,6 +53,8 @@ function DashboardNavber() {
         <>
           <li>
             <NavLink to="/">Home</NavLink>
+            <NavLink to={"/Dashboard/addtask"}>Add Task</NavLink>
+            <NavLink to={"/Dashboard/mytask"}>My Task</NavLink>
           </li>
         </>
       ) : (
@@ -63,7 +66,6 @@ function DashboardNavber() {
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-
       <div className="drawer-content flex flex-col">
         <div className="w-full navbar bg-base-100 px-4 shadow-md">
           <div className="flex-none lg:hidden">
@@ -75,7 +77,6 @@ function DashboardNavber() {
               <IoReorderThreeSharp className="text-2xl" />
             </label>
           </div>
-
           <div className="flex justify-between items-center w-full">
             <div className="navbar-start flex items-center gap-6">
               <h3 className="text-xl font-bold">quanticoinz</h3>
@@ -99,6 +100,11 @@ function DashboardNavber() {
               />
             </div>
           </div>
+        </div>
+        <div className="p-5 ">
+          {" "}
+          <ToastContainer />
+          <Outlet />
         </div>
       </div>
 

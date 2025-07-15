@@ -7,6 +7,9 @@ import LoginAndReg from "../Layout/LoginAndRe/LoginAndReg";
 import Login from "../Pages/LoginAndReg/Login";
 import Register from "../Pages/LoginAndReg/Register";
 import Dashboard from "../Layout/Dashboard/Dashboard";
+import PrivateRoute from "../Provider/PrivateRoute";
+import AddTaskForm from "../Pages/Dashboard/Buyer/AddTask";
+import MyTasks from "../Pages/Dashboard/Buyer/MyTask";
 
 const router = createBrowserRouter([
   {
@@ -39,7 +42,29 @@ const router = createBrowserRouter([
   {
     path: "/Dashboard",
     ErrorBoundary: Error,
-    Component: Dashboard,
+    element: (
+      <PrivateRoute>
+        <Dashboard></Dashboard>
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "/Dashboard/addtask",
+        element: (
+          <PrivateRoute>
+            <AddTaskForm />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/mytask",
+        element: (
+          <PrivateRoute>
+            <MyTasks />{" "}
+          </PrivateRoute>
+        ),
+      },
+    ],
   },
 ]);
 
