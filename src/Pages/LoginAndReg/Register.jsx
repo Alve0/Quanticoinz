@@ -65,6 +65,7 @@ function Register() {
 
     try {
       const user = {
+        name: data.name,
         email: data.email,
         role: data.role,
         created_at: new Date().toLocaleString(),

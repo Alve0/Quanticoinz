@@ -6,6 +6,7 @@ import Home from "../Pages/Home/Home/Home";
 import LoginAndReg from "../Layout/LoginAndRe/LoginAndReg";
 import Login from "../Pages/LoginAndReg/Login";
 import Register from "../Pages/LoginAndReg/Register";
+import Dashboard from "../Layout/Dashboard/Dashboard";
 
 const router = createBrowserRouter([
   {
@@ -34,6 +35,11 @@ const router = createBrowserRouter([
         Component: Register,
       },
     ],
+  },
+  {
+    path: "/Dashboard",
+    ErrorBoundary: Error,
+    Component: Dashboard,
   },
 ]);
 

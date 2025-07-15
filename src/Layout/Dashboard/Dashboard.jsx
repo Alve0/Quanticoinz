@@ -1,26 +1,21 @@
 import React, { use } from "react";
-import { Outlet } from "react-router";
-
-import Footer from "../../Share/NavberAndFooter/Footer";
+import DashboardNavber from "../../Share/NavberAndFooter/DashboardLayout/DashboardNavber";
 import { AuthContext } from "../../Provider/AuthProvider";
 import Loading from "../../Pages/Loading/Loading";
-import Navber from "../../Share/NavberAndFooter/BasicNavber/Navber";
 
-function Root() {
+function Dashboard() {
   const { loading } = use(AuthContext);
   return (
-    <div>
+    <>
       {loading ? (
         <Loading />
       ) : (
         <div>
-          <Navber />
-          <Outlet />
-          <Footer />
+          <DashboardNavber />
         </div>
       )}
-    </div>
+    </>
   );
 }
 
-export default Root;
+export default Dashboard;

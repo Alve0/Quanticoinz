@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Link, NavLink } from "react-router"; // Updated import to use react-router-dom
-import { AuthContext } from "../../Provider/AuthProvider";
-import useAxiosSecure from "../../Provider/useAxiosSecure";
+import { AuthContext } from "../../../Provider/AuthProvider";
+import useAxiosSecure from "../../../Provider/useAxiosSecure";
 
 import { PiCoinsFill } from "react-icons/pi";
 const Navber = () => {
@@ -117,7 +117,7 @@ const Navber = () => {
                 login
               </button>
             </Link>
-            <Link to={"/log-reg/login"}>
+            <Link to={"/log-reg/register"}>
               <button className="btn bg-lime-500 hover:bg-lime-600 text-white font-bold border-none w-16">
                 join
               </button>

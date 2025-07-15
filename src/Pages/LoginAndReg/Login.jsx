@@ -43,10 +43,11 @@ function Login() {
       console.log("Google Login Success:", res.user);
 
       const loginUser = {
+        name: res.user.name,
         email: res.user.email,
         created_at: new Date().toLocaleString(),
         last_login: new Date().toLocaleString(),
-        role: "user",
+        role: "buyer",
         coin: 50,
       };
 
