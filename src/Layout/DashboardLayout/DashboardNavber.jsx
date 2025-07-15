@@ -56,6 +56,7 @@ function DashboardNavber() {
             <NavLink to={"/Dashboard/addtask"}>Add Task</NavLink>
             <NavLink to={"/Dashboard/mytask"}>My Task</NavLink>
             <NavLink to={"/Dashboard/purchasecoin"}>Purchase Coin </NavLink>
+            <NavLink to={"/Dashboard/paymenthistory"}>Payment History </NavLink>
           </li>
         </>
       ) : (

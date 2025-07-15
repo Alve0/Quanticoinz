@@ -11,6 +11,7 @@ import PrivateRoute from "../Provider/PrivateRoute";
 import AddTaskForm from "../Pages/Dashboard/Buyer/AddTask";
 import MyTasks from "../Pages/Dashboard/Buyer/MyTask";
 import PurchaseCoin from "../Pages/Dashboard/Buyer/PurchaseCoin";
+import PaymentHistory from "../Pages/Dashboard/Buyer/PaymentHistory";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <PurchaseCoin />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/paymenthistory",
+        element: (
+          <PrivateRoute>
+            <PaymentHistory />
           </PrivateRoute>
         ),
       },
