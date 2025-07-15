@@ -10,6 +10,7 @@ import Dashboard from "../Layout/Dashboard/Dashboard";
 import PrivateRoute from "../Provider/PrivateRoute";
 import AddTaskForm from "../Pages/Dashboard/Buyer/AddTask";
 import MyTasks from "../Pages/Dashboard/Buyer/MyTask";
+import PurchaseCoin from "../Pages/Dashboard/Buyer/PurchaseCoin";
 
 const router = createBrowserRouter([
   {
@@ -61,6 +62,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <MyTasks />{" "}
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/purchasecoin",
+        element: (
+          <PrivateRoute>
+            <PurchaseCoin />
           </PrivateRoute>
         ),
       },
