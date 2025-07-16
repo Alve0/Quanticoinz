@@ -16,6 +16,8 @@ import TaskList from "../Pages/Dashboard/Worker/TaskLish";
 import TaskDetails from "../Pages/Dashboard/Worker/TaskDetails";
 import BuyerStats from "../Pages/Dashboard/Buyer/BuyerStats";
 import TaskReview from "../Pages/Dashboard/Buyer/TaskReview";
+import WorkerStats from "../Pages/Dashboard/Worker/WorkerStats";
+import ApprovedSubmissions from "../Pages/Dashboard/Worker/ApprovedSubmissions";
 
 const router = createBrowserRouter([
   {
@@ -115,6 +117,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <TaskReview />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/workerstats",
+        element: (
+          <PrivateRoute>
+            <WorkerStats />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/approvedsubmissions",
+        element: (
+          <PrivateRoute>
+            <ApprovedSubmissions />
           </PrivateRoute>
         ),
       },
