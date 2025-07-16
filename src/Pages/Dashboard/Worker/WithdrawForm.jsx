@@ -29,7 +29,7 @@ const WithdrawForm = () => {
     if (user?.email) fetchCoin();
   }, [user, axiosSecure]);
 
-  // Calculate withdrawal amount based on coins (20 coins = $1)
+  // Update withdrawal amount (20 coins = $1)
   useEffect(() => {
     const coinVal = parseInt(withdrawCoin);
     if (!isNaN(coinVal)) {
@@ -39,28 +39,40 @@ const WithdrawForm = () => {
     }
   }, [withdrawCoin]);
 
-  // Handle coin input change
+  // Allow user to type any number, validate later
   const handleWithdrawCoinChange = (e) => {
     const value = e.target.value;
-
-    // Allow empty input
-    if (value === "") {
-      setWithdrawCoin("");
-      setWithdrawAmount(0);
-      setError(null);
-      return;
-    }
-
-    // Allow only numbers
-    if (!/^\d+$/.test(value)) {
-      setError("Please enter a valid number");
-      return;
-    }
+    setWithdrawCoin(value);
 
     const coinVal = parseInt(value);
+    if (value === "") {
+      setWithdrawAmount(0);
+      setError(null);
+    } else if (!/^\d+$/.test(value)) {
+      setWithdrawAmount(0);
+      setError("Please enter a valid number");
+    } else {
+      setWithdrawAmount((coinVal / 20).toFixed(2));
+      setError(null);
+    }
+  };
 
-    if (coinVal > coin) {
-      setError("Cannot withdraw more than available coins");
+  // Account number change
+  const handleAccountNumberChange = (e) => {
+    const value = e.target.value;
+    setAccountNumber(value);
+  };
+
+  // Submit withdrawal request
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+
+    const coinVal = parseInt(withdrawCoin);
+
+    // Input validations
+    if (isNaN(coinVal)) {
+      setError("Please enter a valid number of coins");
       return;
     }
 
@@ -69,31 +81,27 @@ const WithdrawForm = () => {
       return;
     }
 
-    setError(null);
-    setWithdrawCoin(value);
-  };
+    if (coinVal > coin) {
+      setError("Cannot withdraw more than available coins");
+      return;
+    }
 
-  // Handle account number change
-  const handleAccountNumberChange = (e) => {
-    const value = e.target.value;
-    if (paymentSystem === "Bank" && value && !/^\d{10,16}$/.test(value)) {
+    if (!accountNumber) {
+      setError("Please enter your account number");
+      return;
+    }
+
+    if (paymentSystem === "Bank" && !/^\d{10,16}$/.test(accountNumber)) {
       setError("Bank account number must be 10-16 digits");
       return;
     }
-    setError(null);
-    setAccountNumber(value);
-  };
 
-  // Submit withdrawal request
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
     setIsLoading(true);
 
     const data = {
       worker_email: user.email,
       worker_name: user.displayName || "Unknown",
-      withdrawal_coin: parseInt(withdrawCoin),
+      withdrawal_coin: coinVal,
       withdrawal_amount: parseFloat(withdrawAmount),
       payment_system: paymentSystem,
       account_number: accountNumber,
@@ -105,7 +113,7 @@ const WithdrawForm = () => {
       setWithdrawCoin("");
       setWithdrawAmount(0);
       setAccountNumber("");
-      setCoin((prev) => prev - data.withdrawal_coin);
+      setCoin((prev) => prev - coinVal);
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Failed to withdraw";
       setError(errorMessage);
@@ -114,8 +122,6 @@ const WithdrawForm = () => {
       setIsLoading(false);
     }
   };
-
-  const canWithdraw = coin >= 20;
 
   return (
     <div className="max-w-xl mx-auto p-4 shadow rounded-lg bg-base-100">
@@ -129,69 +135,61 @@ const WithdrawForm = () => {
 
       {error && <p className="text-red-500 font-semibold mb-4">{error}</p>}
 
-      {!canWithdraw ? (
-        <p className="text-red-500 font-semibold">
-          You need at least 20 coins to withdraw
-        </p>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="label">Coin to Withdraw</label>
-            <input
-              type="number"
-              min="20"
-              max={coin}
-              className="input input-bordered w-full"
-              value={withdrawCoin}
-              onChange={handleWithdrawCoinChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <div>
-            <label className="label">Withdrawal Amount ($)</label>
-            <input
-              type="text"
-              value={withdrawAmount}
-              className="input input-bordered w-full bg-gray-100"
-              readOnly
-            />
-          </div>
-          <div>
-            <label className="label">Select Payment System</label>
-            <select
-              className="select select-bordered w-full"
-              value={paymentSystem}
-              onChange={(e) => setPaymentSystem(e.target.value)}
-              disabled={isLoading}
-            >
-              <option>Bkash</option>
-              <option>Rocket</option>
-              <option>Nagad</option>
-              <option>Payoneer</option>
-              <option>Bank</option>
-            </select>
-          </div>
-          <div>
-            <label className="label">Account Number</label>
-            <input
-              type="text"
-              className="input input-bordered w-full"
-              value={accountNumber}
-              onChange={handleAccountNumberChange}
-              required
-              disabled={isLoading}
-            />
-          </div>
-          <button
-            type="submit"
-            className="btn btn-primary w-full"
-            disabled={isLoading || error}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="label">Coin to Withdraw</label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            value={withdrawCoin}
+            onChange={handleWithdrawCoinChange}
+            placeholder="Enter coin amount"
+            disabled={isLoading}
+          />
+        </div>
+        <div>
+          <label className="label">Withdrawal Amount ($)</label>
+          <input
+            type="text"
+            value={withdrawAmount}
+            className="input input-bordered w-full bg-gray-100"
+            readOnly
+          />
+        </div>
+        <div>
+          <label className="label">Select Payment System</label>
+          <select
+            className="select select-bordered w-full"
+            value={paymentSystem}
+            onChange={(e) => setPaymentSystem(e.target.value)}
+            disabled={isLoading}
           >
-            {isLoading ? "Submitting..." : "Submit Withdrawal"}
-          </button>
-        </form>
-      )}
+            <option>Bkash</option>
+            <option>Rocket</option>
+            <option>Nagad</option>
+            <option>Payoneer</option>
+            <option>Bank</option>
+          </select>
+        </div>
+        <div>
+          <label className="label">Account Number</label>
+          <input
+            type="text"
+            className="input input-bordered w-full"
+            value={accountNumber}
+            onChange={handleAccountNumberChange}
+            required
+            disabled={isLoading}
+          />
+        </div>
+        <button
+          type="submit"
+          className="btn btn-primary w-full"
+          disabled={isLoading}
+        >
+          {isLoading ? "Submitting..." : "Submit Withdrawal"}
+        </button>
+      </form>
     </div>
   );
 };
