@@ -19,7 +19,7 @@ const Navber = () => {
           setRole(res.data.role);
         }
       } catch (err) {
-        console.log(err);
+        
       }
     };
 
@@ -33,19 +33,19 @@ const Navber = () => {
         setUser(null);
       }
     } catch (err) {
-      console.log(err);
+      
     }
   };
 
   const getDashboardUrl = () => {
-    if (!role) return ""; // Return empty if role is not yet fetched
+    if (!role) return "";
     switch (role) {
       case "buyer":
         return "/Dashboard/buyerstats";
       case "worker":
         return "/Dashboard/workerstats";
       case "admin":
-        return "/Dashboard/adminstats";
+        return "/Dashboard/adminsummary";
       default:
         return "";
     }
@@ -60,7 +60,7 @@ const Navber = () => {
     </>
   );
 
-  console.log(coin);
+  
 
   return (
     <div className="navbar bg-base-100 shadow-sm">

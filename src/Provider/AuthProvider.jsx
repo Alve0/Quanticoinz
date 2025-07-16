@@ -20,7 +20,6 @@ const AuthProvider = ({ children }) => {
 
   // Create user
   const createUser = (email, password) => {
-    console.log("form the create user for authContex ", auth);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -87,7 +86,6 @@ const AuthProvider = ({ children }) => {
     resetPass,
     profileUpdate,
   };
-  console.log(user);
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );

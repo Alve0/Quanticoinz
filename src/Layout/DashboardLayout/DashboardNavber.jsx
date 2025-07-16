@@ -1,15 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { IoReorderThreeSharp } from "react-icons/io5";
 import { NavLink, Outlet } from "react-router";
 import { PiCoinsFill } from "react-icons/pi";
+import { IoNotifications } from "react-icons/io5";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useAxiosSecure from "../../Provider/useAxiosSecure";
 import { ToastContainer } from "react-toastify";
+import Notifications from "./Notifications";
 
 function DashboardNavber() {
   const { user } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
+  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
 
   const { data: userData } = useQuery({
     queryKey: ["userData", user?.email],
@@ -28,13 +31,20 @@ function DashboardNavber() {
             <NavLink to="/">Home</NavLink>
           </li>
           <li>
-            <NavLink to="/dashboard">Dashboard</NavLink>
+            <NavLink to="/Dashboard/adminsummary">Admin Summary</NavLink>
           </li>
           <li>
-            <NavLink to="/messages">Messages</NavLink>
+            <NavLink to="/Dashboard/adminwithdrawals">
+              Worker Withdraw Request
+            </NavLink>
           </li>
           <li>
-            <NavLink to="/settings">Settings</NavLink>
+            <NavLink to="/Dashboard/manageusers">Manage Users</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/adminmanagetasks">
+              Admin Manage Tasks
+            </NavLink>
           </li>
         </>
       ) : (
@@ -45,7 +55,6 @@ function DashboardNavber() {
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
-
           <li>
             <NavLink to="/Dashboard/workerstats">Worker Stats</NavLink>
           </li>
@@ -54,7 +63,6 @@ function DashboardNavber() {
               Approved Submissions
             </NavLink>
           </li>
-
           <li>
             <NavLink to="/Dashboard/tasklist">Task List</NavLink>
           </li>
@@ -69,12 +77,24 @@ function DashboardNavber() {
         <>
           <li>
             <NavLink to="/">Home</NavLink>
-            <NavLink to={"/Dashboard/buyerstats"}> Buyer Stats </NavLink>
-            <NavLink to={"/Dashboard/addtask"}>Add Task</NavLink>
-            <NavLink to={"/Dashboard/mytask"}>My Task</NavLink>
-            <NavLink to={"/Dashboard/purchasecoin"}>Purchase Coin </NavLink>
-            <NavLink to={"/Dashboard/paymenthistory"}>Payment History </NavLink>
-            <NavLink to={"/Dashboard/taskreview"}>Task Review</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/buyerstats">Buyer Stats</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/addtask">Add Task</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/mytask">My Task</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/purchasecoin">Purchase Coin</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/paymenthistory">Payment History</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/taskreview">Task Review</NavLink>
           </li>
         </>
       ) : (
@@ -108,8 +128,14 @@ function DashboardNavber() {
                 </div>
               </div>
             </div>
-            <div className="navbar-end">
-              <div className="mr-5 text-right">
+            <div className="navbar-end flex items-center gap-4">
+              <button
+                className="btn btn-ghost btn-circle"
+                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              >
+                <IoNotifications className="text-2xl" />
+              </button>
+              <div className="text-right">
                 <h3>{userData?.role || "User"}</h3>
                 <h3>{user.displayName || "No name"}</h3>
               </div>
@@ -121,13 +147,15 @@ function DashboardNavber() {
             </div>
           </div>
         </div>
-        <div className="p-5 ">
-          {" "}
+        <div className="p-5">
           <ToastContainer />
+          <Notifications
+            isOpen={isNotificationOpen}
+            onClose={() => setIsNotificationOpen(false)}
+          />
           <Outlet />
         </div>
       </div>
-
       <div className="drawer-side">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 min-h-full bg-gray-100 text-base-content">

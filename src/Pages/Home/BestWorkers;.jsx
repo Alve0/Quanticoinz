@@ -10,7 +10,13 @@ const BestWorkers = () => {
     const fetchTopWorkers = async () => {
       try {
         const res = await axiosSecure.get("/users/top-workers");
-        setWorkers(res.data.slice(0, 6)); // Top 6 only
+        // Filter by role === "worker"
+        const topWorkers = res.data
+          .filter((user) => user.role === "worker")
+          .sort((a, b) => b.coin - a.coin)
+          .slice(0, 6);
+
+        setWorkers(topWorkers);
       } catch (err) {
         console.error("Error fetching top workers:", err);
       } finally {

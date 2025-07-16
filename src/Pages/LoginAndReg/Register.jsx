@@ -53,7 +53,6 @@ function Register() {
       };
 
       const dbRes = await useaxios.post("/users", userDoc);
-      console.log("User saved to DB:", dbRes.data);
 
       navigate("/");
     } catch (error) {

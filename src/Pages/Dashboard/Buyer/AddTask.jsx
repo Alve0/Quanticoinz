@@ -93,7 +93,6 @@ function AddTaskForm() {
         user_email: user.email,
       };
       const res = await axiosSecure.post("/tasks", taskData);
-      console.log("Task created:", res.data);
       reset(); // Reset form after successful submission
       setImagePreview(null); // Clear image preview
       toast.success("Task created successfully!", {

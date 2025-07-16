@@ -19,6 +19,10 @@ import TaskReview from "../Pages/Dashboard/Buyer/TaskReview";
 import WorkerStats from "../Pages/Dashboard/Worker/WorkerStats";
 import ApprovedSubmissions from "../Pages/Dashboard/Worker/ApprovedSubmissions";
 import WithdrawForm from "../Pages/Dashboard/Worker/WithdrawForm";
+import AdminSummary from "../Pages/Dashboard/Admin/AdminSummary";
+import AdminWithdrawals from "../Pages/Dashboard/Admin/AdminWithdrawals";
+import ManageUsers from "../Pages/Dashboard/Admin/ManageUsers";
+import AdminManageTasks from "../Pages/Dashboard/Admin/AdminManageTasks";
 
 const router = createBrowserRouter([
   {
@@ -142,6 +146,38 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <WithdrawForm />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/adminsummary",
+        element: (
+          <PrivateRoute>
+            <AdminSummary />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/adminwithdrawals",
+        element: (
+          <PrivateRoute>
+            <AdminWithdrawals />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/manageusers",
+        element: (
+          <PrivateRoute>
+            <ManageUsers />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/adminmanagetasks",
+        element: (
+          <PrivateRoute>
+            <AdminManageTasks />
           </PrivateRoute>
         ),
       },

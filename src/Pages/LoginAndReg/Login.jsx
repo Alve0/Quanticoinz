@@ -20,7 +20,6 @@ function Login() {
   const onSubmit = async (data) => {
     try {
       const res = await login(data.email, data.password);
-      console.log("Login Success:", res);
 
       const loginUser = {
         email: data.email,
@@ -28,7 +27,6 @@ function Login() {
       };
 
       const response = await useaxios.post("/users", loginUser);
-      console.log("User updated:", response.data);
 
       navigate("/");
       setUser(res.user);
@@ -40,7 +38,6 @@ function Login() {
   const handleGoogleLogin = async () => {
     try {
       const res = await googleLogin();
-      console.log("Google Login Success:", res.user);
 
       const loginUser = {
         name: res.user.name,
@@ -52,7 +49,6 @@ function Login() {
       };
 
       const response = await useaxios.post("/users", loginUser);
-      console.log("users saved to DB:", response.data);
       navigate("/");
       setUser(res.user);
     } catch (error) {
