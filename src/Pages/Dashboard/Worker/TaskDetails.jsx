@@ -123,98 +123,112 @@ const TaskDetails = () => {
   return (
     <div className="container mx-auto p-4">
       <button
-        className="btn btn-ghost mb-4 flex items-center"
+        className="btn btn-outline mb-6 flex items-center gap-2"
         onClick={() => navigate("/Dashboard/tasklist")}
       >
-        <FaArrowLeft className="mr-2" /> Back to Tasks
+        <FaArrowLeft /> Back to Task List
       </button>
-      <div className="card bg-base-100 shadow-xl mb-6">
-        <div className="card-body">
-          <h2 className="card-title text-2xl font-bold flex items-center">
-            <FaTasks className="mr-2" /> {task.task_title}
-          </h2>
-          <p>
-            <strong>Task ID:</strong> {task._id}
-          </p>
-          <p>
-            <strong>Buyer:</strong> {task.user_email}
-          </p>
-          <p>
-            <strong>Details:</strong> {task.task_detail}
-          </p>
-          <p>
-            <strong>Completion Date:</strong>{" "}
-            {new Date(task.completion_date).toLocaleDateString()}
-          </p>
-          <p>
-            <strong>Payable Amount:</strong> {task.payable_amount} Coins
-          </p>
-          <p>
-            <strong>Total Amount:</strong> {task.total_amount} Coins
-          </p>
-          <p>
-            <strong>Workers Needed:</strong> {task.required_workers}
-          </p>
-          <p>
-            <strong>Submission Info:</strong> {task.submission_info}
-          </p>
-          <p>
-            <strong>Status:</strong> {task.status}
-          </p>
-          <p>
-            <strong>Created At:</strong>{" "}
-            {new Date(task.created_at).toLocaleString()}
-          </p>
-          {task.task_image && (
-            <div className="mt-4">
-              <img
-                src={task.task_image}
-                alt="Task"
-                className="w-full max-w-md rounded-lg shadow-md"
-                onError={(e) => {
-                  e.target.src = "https://via.placeholder.com/400"; // Fallback image
-                  toast.error("Failed to load task image");
-                }}
-              />
-            </div>
-          )}
+
+      <div className="card bg-white shadow-xl rounded-lg mb-8 p-6">
+        <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
+          <FaTasks /> Task Details
+        </h2>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div>
+            <p>
+              <span className="font-semibold">Title:</span> {task.task_title}
+            </p>
+            <p>
+              <span className="font-semibold">Buyer:</span> {task.user_email}
+            </p>
+            <p>
+              <span className="font-semibold">Task ID:</span> {task._id}
+            </p>
+            <p>
+              <span className="font-semibold">Completion Date:</span>{" "}
+              {new Date(task.completion_date).toLocaleDateString()}
+            </p>
+            <p>
+              <span className="font-semibold">Created At:</span>{" "}
+              {new Date(task.created_at).toLocaleString()}
+            </p>
+          </div>
+          <div>
+            <p>
+              <span className="font-semibold">Payable Amount:</span>{" "}
+              <span className="badge badge-success">
+                {task.payable_amount} Coins
+              </span>
+            </p>
+            <p>
+              <span className="font-semibold">Total Amount:</span>{" "}
+              <span className="badge badge-info">
+                {task.total_amount} Coins
+              </span>
+            </p>
+            <p>
+              <span className="font-semibold">Workers Needed:</span>{" "}
+              <span className="badge badge-warning">
+                {task.required_workers}
+              </span>
+            </p>
+            <p>
+              <span className="font-semibold">Status:</span>{" "}
+              <span
+                className={`badge ${
+                  task.status === "pending" ? "badge-warning" : "badge-success"
+                }`}
+              >
+                {task.status}
+              </span>
+            </p>
+          </div>
         </div>
+
+        <div className="divider mt-6 mb-4">Task Description</div>
+        <p className="mb-4">{task.task_detail}</p>
+
+        {task.task_image && (
+          <div className="mt-6 flex justify-center">
+            <img
+              src={task.task_image}
+              alt="Task"
+              className="w-full max-w-md rounded-lg border shadow"
+            />
+          </div>
+        )}
       </div>
 
-      <div className="card bg-base-100 shadow-xl">
-        <div className="card-body">
-          <h3 className="text-xl font-semibold mb-4 flex items-center">
-            <FaPaperPlane className="mr-2" /> Submit Your Work
-          </h3>
-          <form onSubmit={handleSubmit}>
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text">Submission Details</span>
-              </label>
-              <textarea
-                className="textarea textarea-bordered"
-                placeholder="Enter your submission details (e.g., screenshot link or description)"
-                value={submissionDetails}
-                onChange={(e) => setSubmissionDetails(e.target.value)}
-                rows={5}
-                required
-              ></textarea>
-            </div>
-            <div className="card-actions justify-end mt-4">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={
-                  submitTaskMutation.isLoading ||
-                  task.status !== "pending" ||
-                  task.required_workers <= 0
-                }
-              >
-                {submitTaskMutation.isLoading ? "Submitting..." : "Submit Task"}
-              </button>
-            </div>
-          </form>
-        </div>
+      <div className="card bg-white shadow-lg rounded-lg p-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+          <FaPaperPlane /> Submit Your Work
+        </h3>
+        <form onSubmit={handleSubmit}>
+          <div className="form-control">
+            <label className="label font-semibold">Submission Details</label>
+            <textarea
+              className="textarea textarea-bordered h-28"
+              placeholder="Enter your submission details (e.g., screenshot link, description)"
+              value={submissionDetails}
+              onChange={(e) => setSubmissionDetails(e.target.value)}
+              required
+            ></textarea>
+          </div>
+          <div className="mt-4 text-right">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={
+                submitTaskMutation.isLoading ||
+                task.status !== "pending" ||
+                task.required_workers <= 0
+              }
+            >
+              {submitTaskMutation.isLoading ? "Submitting..." : "Submit Task"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );
