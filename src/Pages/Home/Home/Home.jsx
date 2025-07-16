@@ -6,12 +6,14 @@ import Lorem from "../Lorem";
 import VibeCode from "../VibeCode";
 import TestimonialSection from "../TestimonialSection";
 import HowItWorks from "../HowItWorks";
+import BestWorkers from "../BestWorkers;";
 
 function Home() {
   return (
     <>
       <Banner />
       <Spacillity />
+      <BestWorkers />
       <VibeCode />
       <TestimonialSection />
       <HowItWorks />

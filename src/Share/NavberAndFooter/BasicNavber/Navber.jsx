@@ -5,7 +5,7 @@ import useAxiosSecure from "../../../Provider/useAxiosSecure";
 
 import { PiCoinsFill } from "react-icons/pi";
 const Navber = () => {
-  const { user, signout, serUser } = useContext(AuthContext);
+  const { user, signout, setUser } = useContext(AuthContext);
   const axiosscure = useAxiosSecure();
   const [coin, setCoin] = useState(null);
   const [role, setRole] = useState("");
@@ -17,8 +17,6 @@ const Navber = () => {
           const res = await axiosscure.get(`/users/${user?.email}`);
           setCoin(res.data.coin);
           setRole(res.data.role);
-
-          console.log(res);
         }
       } catch (err) {
         console.log(err);
@@ -32,26 +30,31 @@ const Navber = () => {
     try {
       const res = await signout();
       if (res) {
-        serUser(null);
+        setUser(null);
       }
     } catch (err) {
       console.log(err);
     }
   };
 
-  const url =
-    role === "buyer"
-      ? "/Dashboard/buyerstats"
-      : role === "worker"
-      ? "/Dashboard/workerstats"
-      : role === "admin"
-      ? "/Dashboard/adminstats"
-      : "";
+  const getDashboardUrl = () => {
+    if (!role) return ""; // Return empty if role is not yet fetched
+    switch (role) {
+      case "buyer":
+        return "/Dashboard/buyerstats";
+      case "worker":
+        return "/Dashboard/workerstats";
+      case "admin":
+        return "/Dashboard/adminstats";
+      default:
+        return "";
+    }
+  };
 
   const navber = (
     <>
       <NavLink to="/">Home</NavLink>
-      <NavLink className="lg:mx-3" to={url}>
+      <NavLink className="lg:mx-3" to={getDashboardUrl()}>
         Dashboard
       </NavLink>
     </>

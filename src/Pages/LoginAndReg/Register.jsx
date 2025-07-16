@@ -24,59 +24,40 @@ function Register() {
     const formData = new FormData();
     formData.append("image", imageFile);
 
-    //image bb upload section
     try {
+      // 1. Upload image to imgbb
       const res = await axios.post(
         `https://api.imgbb.com/1/upload?expiration=600&key=${
           import.meta.env.VITE_apiKey_imagebb
         }`,
         formData
       );
-      console.log("Upload successful:", res.data);
-      const imageData = res.data;
+      const imageURL = res.data.data.display_url;
 
-      //firebase register section
+      // 2. Register user with Firebase
+      const firebaseRes = await createUser(data.email, data.password);
+      setUser(firebaseRes.user);
 
-      try {
-        const res = await createUser(data.email, data.password);
+      // 3. Update Firebase profile
+      await profileUpdate(data.name, imageURL);
 
-        console.log("User created:", res.user);
-        //profile update section
-        setUser(res.user);
-        try {
-          const res = await profileUpdate(
-            data.name,
-            imageData.data.display_url
-          );
-        } catch (err) {
-          console.error("Firebase Error:", err.code, err.message);
-        }
-      } catch (err) {
-        console.error("Firebase Error:", err.code, err.message);
-      }
-    } catch (error) {
-      console.log("imagebb");
-      console.error("Upload failed:", error.response?.data || error.message);
-    }
-
-    console.log(user);
-
-    //update user to database
-
-    try {
-      const user = {
+      // 4. Save to your backend database
+      const userDoc = {
         name: data.name,
         email: data.email,
         role: data.role,
+        photoURL: imageURL, // ✅ Save image URL here
         created_at: new Date().toLocaleString(),
         last_login: new Date().toLocaleString(),
-        coin: data.role == "Worker" ? 10 : 50,
+        coin: data.role === "worker" ? 10 : 50,
       };
 
-      const res = await useaxios.post("/users", user);
-      console.log(res.data);
-    } catch (err) {
-      console.log("axios error : ", err);
+      const dbRes = await useaxios.post("/users", userDoc);
+      console.log("User saved to DB:", dbRes.data);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Registration error:", error);
     }
   };
 
