@@ -12,6 +12,8 @@ import AddTaskForm from "../Pages/Dashboard/Buyer/AddTask";
 import MyTasks from "../Pages/Dashboard/Buyer/MyTask";
 import PurchaseCoin from "../Pages/Dashboard/Buyer/PurchaseCoin";
 import PaymentHistory from "../Pages/Dashboard/Buyer/PaymentHistory";
+import TaskList from "../Pages/Dashboard/Worker/TaskLish";
+import TaskDetails from "../Pages/Dashboard/Worker/TaskDetails";
 
 const router = createBrowserRouter([
   {
@@ -79,6 +81,22 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <PaymentHistory />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/tasklist",
+        element: (
+          <PrivateRoute>
+            <TaskList />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/task/:id",
+        element: (
+          <PrivateRoute>
+            <TaskDetails />
           </PrivateRoute>
         ),
       },

@@ -45,6 +45,9 @@ function DashboardNavber() {
           <li>
             <NavLink to="/">Home</NavLink>
           </li>
+          <li>
+            <NavLink to="/Dashboard/tasklist">Task List</NavLink>
+          </li>
         </>
       ) : (
         <></>
