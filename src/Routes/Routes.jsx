@@ -18,6 +18,7 @@ import BuyerStats from "../Pages/Dashboard/Buyer/BuyerStats";
 import TaskReview from "../Pages/Dashboard/Buyer/TaskReview";
 import WorkerStats from "../Pages/Dashboard/Worker/WorkerStats";
 import ApprovedSubmissions from "../Pages/Dashboard/Worker/ApprovedSubmissions";
+import WithdrawForm from "../Pages/Dashboard/Worker/WithdrawForm";
 
 const router = createBrowserRouter([
   {
@@ -133,6 +134,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ApprovedSubmissions />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/withdrawform",
+        element: (
+          <PrivateRoute>
+            <WithdrawForm />
           </PrivateRoute>
         ),
       },
