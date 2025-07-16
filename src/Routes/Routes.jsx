@@ -14,6 +14,7 @@ import PurchaseCoin from "../Pages/Dashboard/Buyer/PurchaseCoin";
 import PaymentHistory from "../Pages/Dashboard/Buyer/PaymentHistory";
 import TaskList from "../Pages/Dashboard/Worker/TaskLish";
 import TaskDetails from "../Pages/Dashboard/Worker/TaskDetails";
+import BuyerStats from "../Pages/Dashboard/Buyer/BuyerStats";
 
 const router = createBrowserRouter([
   {
@@ -97,6 +98,14 @@ const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <TaskDetails />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "/Dashboard/buyerstats",
+        element: (
+          <PrivateRoute>
+            <BuyerStats />
           </PrivateRoute>
         ),
       },

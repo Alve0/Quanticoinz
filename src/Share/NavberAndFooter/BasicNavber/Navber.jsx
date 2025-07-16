@@ -8,6 +8,7 @@ const Navber = () => {
   const { user, signout, serUser } = useContext(AuthContext);
   const axiosscure = useAxiosSecure();
   const [coin, setCoin] = useState(null);
+  const [role, setRole] = useState("");
 
   useEffect(() => {
     const fetchCoin = async () => {
@@ -15,6 +16,8 @@ const Navber = () => {
         if (user?.email) {
           const res = await axiosscure.get(`/users/${user?.email}`);
           setCoin(res.data.coin);
+          setRole(res.data.role);
+
           console.log(res);
         }
       } catch (err) {
@@ -36,10 +39,19 @@ const Navber = () => {
     }
   };
 
+  const url =
+    role === "buyer"
+      ? "/Dashboard/buyerstats"
+      : role === "worker"
+      ? "/Dashboard/workerstats"
+      : role === "admin"
+      ? "/Dashboard/adminstats"
+      : "";
+
   const navber = (
     <>
       <NavLink to="/">Home</NavLink>
-      <NavLink className="lg:mx-3" to="/dashboard">
+      <NavLink className="lg:mx-3" to={url}>
         Dashboard
       </NavLink>
     </>

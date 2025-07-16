@@ -56,6 +56,7 @@ function DashboardNavber() {
         <>
           <li>
             <NavLink to="/">Home</NavLink>
+            <NavLink to={"/Dashboard/buyerstats"}> Buyer Stats </NavLink>
             <NavLink to={"/Dashboard/addtask"}>Add Task</NavLink>
             <NavLink to={"/Dashboard/mytask"}>My Task</NavLink>
             <NavLink to={"/Dashboard/purchasecoin"}>Purchase Coin </NavLink>
