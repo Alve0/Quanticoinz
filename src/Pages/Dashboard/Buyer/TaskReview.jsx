@@ -4,6 +4,7 @@ import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
 import { toast } from "react-toastify";
 import Modal from "./ReviewModal";
+import Loading from "../../Loading/Loading";
 
 const TaskReview = () => {
   const { user } = useContext(AuthContext);
@@ -49,7 +50,7 @@ const TaskReview = () => {
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Task Submissions to Review</h2>
       {isLoading ? (
-        <p>Loading...</p>
+        <Loading />
       ) : submissions.length === 0 ? (
         <p>No pending submissions.</p>
       ) : (

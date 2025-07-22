@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
 import { FaListUl, FaUsers, FaCoins } from "react-icons/fa";
+import Loading from "../../Loading/Loading";
 
 const BuyerStats = () => {
   const { user } = useContext(AuthContext);
@@ -18,7 +19,7 @@ const BuyerStats = () => {
   });
 
   if (isLoading) {
-    return <span className="loading loading-spinner loading-lg"></span>;
+    return <Loading />;
   }
 
   if (error) {

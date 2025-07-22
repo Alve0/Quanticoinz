@@ -1,11 +1,12 @@
-import React, { use } from "react";
+import React, { use, useState } from "react";
 import regImage from "../../Assets/standard.0638957.png";
 import { Link, useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { AuthContext } from "../../Provider/AuthProvider";
-
 import useAxios from "../../Provider/useAxios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function Register() {
   const useaxios = useAxios();
@@ -17,8 +18,10 @@ function Register() {
 
   const { createUser, profileUpdate, user, setUser } = use(AuthContext);
   const navigate = useNavigate();
+  const [firebaseError, setFirebaseError] = useState("");
 
   const onSubmit = async (data) => {
+    setFirebaseError(""); // reset error message
     data.email = data.email.toLowerCase();
     const imageFile = data.image[0];
     const formData = new FormData();
@@ -27,7 +30,7 @@ function Register() {
     try {
       // 1. Upload image to imgbb
       const res = await axios.post(
-        `https://api.imgbb.com/1/upload?expiration=600&key=${
+        `https://api.imgbb.com/1/upload?key=${
           import.meta.env.VITE_apiKey_imagebb
         }`,
         formData
@@ -46,17 +49,37 @@ function Register() {
         name: data.name,
         email: data.email,
         role: data.role,
-        photoURL: imageURL, // ✅ Save image URL here
+        photoURL: imageURL,
         created_at: new Date().toLocaleString(),
         last_login: new Date().toLocaleString(),
         coin: data.role === "worker" ? 10 : 50,
       };
 
-      const dbRes = await useaxios.post("/users", userDoc);
+      await useaxios.post("/users", userDoc);
 
+      toast.success("Registration successful!");
       navigate("/");
     } catch (error) {
       console.error("Registration error:", error);
+
+      // Handle Firebase errors
+      const errorCode = error.code || error.response?.data?.error?.message;
+
+      switch (errorCode) {
+        case "auth/email-already-in-use":
+        case "EMAIL_EXISTS":
+          toast.error("This email is already registered.");
+          break;
+        case "auth/invalid-email":
+          toast.error("Invalid email format.");
+          break;
+        case "auth/weak-password":
+          toast.error("Password should be at least 6 characters.");
+          break;
+        default:
+          toast.error("Something went wrong. Please try again.");
+          break;
+      }
     }
   };
 
@@ -80,33 +103,22 @@ function Register() {
           </h3>
           <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Name
               </label>
               <input
                 type="text"
-                id="name"
                 {...register("name")}
-                name="name"
-                placeholder="Enter your name"
                 required
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md"
               />
             </div>
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Email
               </label>
               <input
                 type="email"
-                id="email"
-                name="email"
                 {...register("email", {
                   required: "Email is required",
                   pattern: {
@@ -114,7 +126,7 @@ function Register() {
                     message: "Invalid email address",
                   },
                 })}
-                className={`input mb-2 input-bordered w-full ${
+                className={`input input-bordered w-full ${
                   errors.email ? "input-error" : ""
                 }`}
                 placeholder="Enter your email"
@@ -126,33 +138,22 @@ function Register() {
               )}
             </div>
             <div>
-              <label
-                htmlFor="profilePicture"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Upload Profile Picture
               </label>
               <input
                 type="file"
-                {...register("image", {
-                  required: "Image is required",
-                })}
+                {...register("image", { required: "Image is required" })}
                 accept="image/*"
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md"
               />
             </div>
-
             <div>
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Password
               </label>
               <input
                 type="password"
-                id="password"
-                name="password"
                 {...register("password", {
                   required: "Password is required",
                   minLength: {
@@ -160,7 +161,7 @@ function Register() {
                     message: "Password must be at least 6 characters",
                   },
                 })}
-                className={`input mb-2 input-bordered w-full ${
+                className={`input input-bordered w-full ${
                   errors.password ? "input-error" : ""
                 }`}
                 placeholder="Enter your password"
@@ -172,21 +173,14 @@ function Register() {
               )}
             </div>
             <div>
-              <label
-                htmlFor="role"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label className="block text-sm font-medium text-gray-700">
                 Role
               </label>
               <select
-                id="role"
-                name="role"
-                {...register("role", {
-                  required: "User role is required",
-                })}
-                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                {...register("role", { required: "User role is required" })}
+                className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-md"
               >
-                <option value="Select a role" disabled selected>
+                <option value="" disabled selected>
                   Select a role
                 </option>
                 <option value="worker">Worker</option>
@@ -195,7 +189,7 @@ function Register() {
             </div>
             <button
               type="submit"
-              className="w-full bg-lime-600 text-white py-2 rounded-md hover:bg-lime-700 transition-colors"
+              className="w-full bg-lime-600 text-white py-2 rounded-md hover:bg-lime-700"
             >
               Register
             </button>
@@ -203,7 +197,7 @@ function Register() {
               Already have an account?{" "}
               <Link
                 to="/log-reg/login"
-                className="text-blue-600 hover:underline font-medium"
+                className="text-blue-600 hover:underline"
               >
                 Login
               </Link>

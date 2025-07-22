@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 function PaymentHistory() {
   const { user } = useContext(AuthContext);
@@ -62,9 +63,7 @@ function PaymentHistory() {
         </div>
 
         {paymentsLoading ? (
-          <div className="text-center text-gray-600">
-            Loading payment history...
-          </div>
+          <Loading />
         ) : payments.length === 0 ? (
           <div className="text-center text-gray-600">No purchases found.</div>
         ) : (

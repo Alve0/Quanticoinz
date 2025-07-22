@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { PiCoinsFill } from "react-icons/pi";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 function MyTasks() {
   const { user } = useContext(AuthContext);
@@ -135,7 +136,7 @@ function MyTasks() {
         </div>
 
         {tasksLoading ? (
-          <div className="text-center text-gray-600">Loading tasks...</div>
+          <Loading />
         ) : tasks.length === 0 ? (
           <div className="text-center text-gray-600">No tasks found.</div>
         ) : (

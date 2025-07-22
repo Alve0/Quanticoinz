@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import { toast } from "react-toastify";
+import Loading from "../../Loading/Loading";
 
 const ManageUsers = () => {
   const { user } = useContext(AuthContext);
@@ -67,7 +68,7 @@ const ManageUsers = () => {
       <h2 className="text-2xl font-bold mb-4">Manage Users</h2>
       {error && <p className="text-red-500 font-semibold mb-4">{error}</p>}
       {isLoading ? (
-        <p>Loading...</p>
+        <Loading />
       ) : users.length === 0 ? (
         <p>No users found</p>
       ) : (

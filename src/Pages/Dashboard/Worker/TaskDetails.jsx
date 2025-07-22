@@ -6,6 +6,7 @@ import { FaArrowLeft, FaTasks, FaPaperPlane } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 const TaskDetails = () => {
   const { id } = useParams();
@@ -69,9 +70,7 @@ const TaskDetails = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
+      <Loading />
     );
   }
 

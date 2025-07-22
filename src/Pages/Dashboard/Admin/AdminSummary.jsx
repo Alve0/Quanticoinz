@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 const AdminSummary = () => {
   const axiosSecure = useAxiosSecure();
@@ -21,7 +22,7 @@ const AdminSummary = () => {
     fetchSummary();
   }, [axiosSecure]);
 
-  if (loading) return <p className="text-center">Loading summary...</p>;
+  if (loading) return <Loading />;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 p-6">

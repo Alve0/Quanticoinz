@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import useAxiosSecure from "../../Provider/useAxiosSecure";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { toast } from "react-toastify";
+import Loading from "../../Pages/Loading/Loading";
 
 const Notifications = ({ isOpen, onClose }) => {
   const { user } = useContext(AuthContext);
@@ -55,7 +56,7 @@ const Notifications = ({ isOpen, onClose }) => {
         <h3 className="text-lg font-bold mb-2">Notifications</h3>
         {loading ? (
           <div className="flex justify-center">
-            <span className="loading loading-spinner loading-md"></span>
+            <Loading />
           </div>
         ) : notifications.length === 0 ? (
           <p className="text-gray-500">No notifications</p>

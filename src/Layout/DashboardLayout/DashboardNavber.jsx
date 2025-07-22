@@ -1,13 +1,13 @@
 import React, { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IoReorderThreeSharp } from "react-icons/io5";
-import { NavLink, Outlet } from "react-router";
+import { IoReorderThreeSharp, IoNotifications } from "react-icons/io5";
+import { NavLink, Link } from "react-router-dom";
 import { PiCoinsFill } from "react-icons/pi";
-import { IoNotifications } from "react-icons/io5";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useAxiosSecure from "../../Provider/useAxiosSecure";
 import { ToastContainer } from "react-toastify";
 import Notifications from "./Notifications";
+import { Outlet } from "react-router";
 
 function DashboardNavber() {
   const { user } = useContext(AuthContext);
@@ -25,7 +25,7 @@ function DashboardNavber() {
 
   const navigation = (
     <>
-      {userData?.role === "admin" ? (
+      {userData?.role === "admin" && (
         <>
           <li>
             <NavLink to="/">Home</NavLink>
@@ -47,10 +47,8 @@ function DashboardNavber() {
             </NavLink>
           </li>
         </>
-      ) : (
-        <></>
       )}
-      {userData?.role === "worker" ? (
+      {userData?.role === "worker" && (
         <>
           <li>
             <NavLink to="/">Home</NavLink>
@@ -70,10 +68,8 @@ function DashboardNavber() {
             <NavLink to="/Dashboard/withdrawform">Withdraw Form</NavLink>
           </li>
         </>
-      ) : (
-        <></>
       )}
-      {userData?.role === "buyer" ? (
+      {userData?.role === "buyer" && (
         <>
           <li>
             <NavLink to="/">Home</NavLink>
@@ -97,9 +93,16 @@ function DashboardNavber() {
             <NavLink to="/Dashboard/taskreview">Task Review</NavLink>
           </li>
         </>
-      ) : (
-        <></>
       )}
+      <li className="mt-4">
+        <a
+          href="https://github.com/Alveom/Assinginment12-Clintside.git"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Join as Developer
+        </a>
+      </li>
     </>
   );
 
@@ -107,6 +110,7 @@ function DashboardNavber() {
     <div className="drawer lg:drawer-open">
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
+        {/* Top Navbar */}
         <div className="w-full navbar bg-base-100 px-4 shadow-md">
           <div className="flex-none lg:hidden">
             <label
@@ -117,36 +121,67 @@ function DashboardNavber() {
               <IoReorderThreeSharp className="text-2xl" />
             </label>
           </div>
+
           <div className="flex justify-between items-center w-full">
             <div className="navbar-start flex items-center gap-6">
-              <h3 className="text-xl font-bold">quanticoinz</h3>
-              <div className="items-center">
-                <h3>Available Coin</h3>
-                <div className="flex items-center ml-2">
+              <Link to="/" className="text-xl font-bold">
+                quanticoinz
+              </Link>
+
+              {user && (
+                <div className="flex items-center gap-2 ml-4">
+                  <span>Available Coin:</span>
                   <PiCoinsFill size={20} />
-                  <h3 className="font-bold ml-1">{userData?.coin || "0"}</h3>
+                  <span className="font-bold ml-1">
+                    {userData?.coin || "0"}
+                  </span>
                 </div>
-              </div>
+              )}
             </div>
+
             <div className="navbar-end flex items-center gap-4">
-              <button
-                className="btn btn-ghost btn-circle"
-                onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              <a
+                href="https://github.com/Alveom/Assinginment12-Clintside.git"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-outline btn-sm"
               >
-                <IoNotifications className="text-2xl" />
-              </button>
-              <div className="text-right">
-                <h3>{userData?.role || "User"}</h3>
-                <h3>{user.displayName || "No name"}</h3>
-              </div>
-              <img
-                src={user.photoURL}
-                alt={user.displayName || "User"}
-                className="w-10 h-10 rounded-full"
-              />
+                Join as Developer
+              </a>
+
+              {user ? (
+                <>
+                  <button
+                    className="btn btn-ghost btn-circle"
+                    onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                  >
+                    <IoNotifications className="text-2xl" />
+                  </button>
+                  <div className="text-right hidden sm:block">
+                    <h3>{userData?.role || "User"}</h3>
+                    <h3>{user.displayName || "No name"}</h3>
+                  </div>
+                  <img
+                    src={user.photoURL || "/default-avatar.png"}
+                    alt={user.displayName || "User"}
+                    className="w-10 h-10 rounded-full"
+                  />
+                </>
+              ) : (
+                <>
+                  <NavLink to="/login" className="btn btn-sm btn-ghost">
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className="btn btn-sm btn-ghost">
+                    Register
+                  </NavLink>
+                </>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Page Content */}
         <div className="p-5">
           <ToastContainer />
           <Notifications
@@ -156,6 +191,8 @@ function DashboardNavber() {
           <Outlet />
         </div>
       </div>
+
+      {/* Sidebar */}
       <div className="drawer-side">
         <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 min-h-full bg-gray-100 text-base-content">

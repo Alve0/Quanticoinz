@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FaTasks } from "react-icons/fa";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 const TaskList = () => {
   const navigate = useNavigate();
@@ -36,9 +37,7 @@ const TaskList = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
+      <Loading />
     );
   }
 

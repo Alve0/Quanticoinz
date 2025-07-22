@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router"; // Updated import to use react-router-dom
+import { Link, NavLink } from "react-router-dom"; // Fixed import
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
-
 import { PiCoinsFill } from "react-icons/pi";
+
 const Navber = () => {
   const { user, signout, setUser } = useContext(AuthContext);
   const axiosscure = useAxiosSecure();
@@ -19,10 +19,9 @@ const Navber = () => {
           setRole(res.data.role);
         }
       } catch (err) {
-        
+        // Handle error silently
       }
     };
-
     fetchCoin();
   }, [user, axiosscure]);
 
@@ -33,12 +32,11 @@ const Navber = () => {
         setUser(null);
       }
     } catch (err) {
-      
+      // Handle logout error
     }
   };
 
   const getDashboardUrl = () => {
-    if (!role) return "";
     switch (role) {
       case "buyer":
         return "/Dashboard/buyerstats";
@@ -47,7 +45,7 @@ const Navber = () => {
       case "admin":
         return "/Dashboard/adminsummary";
       default:
-        return "";
+        return "/";
     }
   };
 
@@ -59,8 +57,6 @@ const Navber = () => {
       </NavLink>
     </>
   );
-
-  
 
   return (
     <div className="navbar bg-base-100 shadow-sm">
@@ -93,21 +89,30 @@ const Navber = () => {
           quanticoinz
         </a>
       </div>
+
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1">{user ? navber : null}</ul>
       </div>
-      <div className="navbar-end">
+
+      <div className="navbar-end flex items-center gap-2">
+        <a
+          href="https://github.com/Alveom/Assinginment12-Clintside.git"
+          className=" btn"
+        >
+          Join as Developer
+        </a>
+
         {user ? (
           <>
-            <div className="flex  gap-2 bg-gray-300 px-5 py-2 mr-4 rounded-4xl">
+            <div className="flex gap-2 bg-gray-300 px-5 py-2 rounded-4xl">
               <PiCoinsFill size={23} />
-              <h3> {coin}</h3>
+              <h3>{coin}</h3>
             </div>
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="m-1 rounded-full">
                 <img
                   className="w-12 rounded-full"
-                  src={user?.photoURL}
+                  src={user?.photoURL || "/default-avatar.png"}
                   alt="User profile"
                 />
               </div>
@@ -125,10 +130,9 @@ const Navber = () => {
             </div>
           </>
         ) : (
-          <div>
+          <div className="flex gap-2">
             <Link to={"/log-reg/login"}>
-              {" "}
-              <button className="btn border-2 border-lime-500 hover:bg-lime-500 hover:text-white font-bold mx-5 w-16">
+              <button className="btn border-2 border-lime-500 hover:bg-lime-500 hover:text-white font-bold w-16">
                 login
               </button>
             </Link>

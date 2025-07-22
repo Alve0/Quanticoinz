@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
+import Loading from "../../Loading/Loading";
 
 const ApprovedSubmissions = () => {
   const { user } = useContext(AuthContext);
@@ -41,9 +42,7 @@ const ApprovedSubmissions = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-24">
-        <span className="loading loading-spinner loading-lg"></span>
-      </div>
+      <Loading />
     );
   }
 
