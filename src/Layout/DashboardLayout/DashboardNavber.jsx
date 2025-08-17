@@ -1,7 +1,11 @@
 import React, { useContext, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IoReorderThreeSharp, IoNotifications, IoNotificationsOutline } from "react-icons/io5";
-import { NavLink, Link, Outlet } from "react-router-dom";
+import {
+  IoReorderThreeSharp,
+  IoNotifications,
+  IoNotificationsOutline,
+} from "react-icons/io5";
+import { NavLink, Link, Outlet, useNavigate } from "react-router-dom";
 import { PiCoinsFill } from "react-icons/pi";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useAxiosSecure from "../../Provider/useAxiosSecure";
@@ -47,15 +51,19 @@ function DashboardNavber() {
     if (!isNotificationOpen) {
       setHasNewNotification(false);
       if (user?.email) {
-        axiosSecure.post(`/notifications/mark-seen/${user.email}`).catch(() => {});
+        axiosSecure
+          .post(`/notifications/mark-seen/${user.email}`)
+          .catch(() => {});
       }
     }
   };
+  const navigate = useNavigate();
 
   const handleLogout = () => {
     signout()
       .then(() => {
         toast.success("Logged out successfully");
+        navigate("/");
       })
       .catch((error) => {
         console.error("Logout error:", error);
@@ -67,31 +75,62 @@ function DashboardNavber() {
     <>
       {userData?.role === "admin" && (
         <>
-          <li><NavLink to="/">Home</NavLink></li>
-          <li><NavLink to="/Dashboard/adminsummary">Admin Summary</NavLink></li>
-          <li><NavLink to="/Dashboard/adminwithdrawals">Worker Withdraw Request</NavLink></li>
-          <li><NavLink to="/Dashboard/manageusers">Manage Users</NavLink></li>
-          <li><NavLink to="/Dashboard/adminmanagetasks">Admin Manage Tasks</NavLink></li>
+          <li>
+            <NavLink to="/Dashboard/adminsummary">Admin Summary</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/adminwithdrawals">
+              Worker Withdraw Request
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/manageusers">Manage Users</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/adminmanagetasks">
+              Admin Manage Tasks
+            </NavLink>
+          </li>
         </>
       )}
       {userData?.role === "worker" && (
         <>
-          <li><NavLink to="/">Home</NavLink></li>
-          <li><NavLink to="/Dashboard/workerstats">Worker Stats</NavLink></li>
-          <li><NavLink to="/Dashboard/approvedsubmissions">Approved Submissions</NavLink></li>
-          <li><NavLink to="/Dashboard/tasklist">Task List</NavLink></li>
-          <li><NavLink to="/Dashboard/withdrawform">Withdraw Form</NavLink></li>
+          <li>
+            <NavLink to="/Dashboard/workerstats">Worker Stats</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/approvedsubmissions">
+              Approved Submissions
+            </NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/tasklist">Task List</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/withdrawform">Withdraw Form</NavLink>
+          </li>
         </>
       )}
       {userData?.role === "buyer" && (
         <>
-          <li><NavLink to="/">Home</NavLink></li>
-          <li><NavLink to="/Dashboard/buyerstats">Buyer Stats</NavLink></li>
-          <li><NavLink to="/Dashboard/addtask">Add Task</NavLink></li>
-          <li><NavLink to="/Dashboard/mytask">My Task</NavLink></li>
-          <li><NavLink to="/Dashboard/purchasecoin">Purchase Coin</NavLink></li>
-          <li><NavLink to="/Dashboard/paymenthistory">Payment History</NavLink></li>
-          <li><NavLink to="/Dashboard/taskreview">Task Review</NavLink></li>
+          <li>
+            <NavLink to="/Dashboard/buyerstats">Buyer Stats</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/addtask">Add Task</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/mytask">My Task</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/purchasecoin">Purchase Coin</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/paymenthistory">Payment History</NavLink>
+          </li>
+          <li>
+            <NavLink to="/Dashboard/taskreview">Task Review</NavLink>
+          </li>
         </>
       )}
       <li className="mt-4">
@@ -134,29 +173,22 @@ function DashboardNavber() {
 
           <div className="flex justify-between items-center w-full">
             <div className="navbar-start flex items-center gap-6">
-              <Link to="/" className="text-xl font-bold text-lime-600">
-                quanticoinz
+              <Link to="/" className="text-xl font-bold ">
+                Quanticoinz
               </Link>
 
               {user && (
                 <div className="flex items-center gap-2 ml-4">
                   <span className="hidden sm:inline">Available Coin:</span>
                   <PiCoinsFill size={20} />
-                  <span className="font-bold ml-1">{userData?.coin || "0"}</span>
+                  <span className="font-bold ml-1">
+                    {userData?.coin || "0"}
+                  </span>
                 </div>
               )}
             </div>
 
             <div className="navbar-end flex items-center gap-4">
-              <a
-                href="https://github.com/Alveom/Assinginment12-Clintside.git"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-outline btn-sm hidden sm:flex"
-              >
-                Join as Developer
-              </a>
-
               {user ? (
                 <>
                   <button
@@ -173,25 +205,27 @@ function DashboardNavber() {
                     )}
                   </button>
                   <div className="text-right hidden sm:block">
-                    <h3 className="font-semibold">{userData?.role || "User"}</h3>
-                    <h3 className="text-sm text-gray-500">{user.displayName || "No name"}</h3>
+                    <h3 className="font-semibold">
+                      {userData?.role || "User"}
+                    </h3>
+                    <h3 className="text-sm text-gray-500">
+                      {user.displayName || "No name"}
+                    </h3>
                   </div>
                   <img
                     src={user.photoURL || "/default-avatar.png"}
                     alt={user.displayName || "User"}
                     className="w-10 h-10 rounded-full border border-gray-300"
                   />
-                  <button
-                    onClick={handleLogout}
-                    className="btn btn-sm btn-error text-white hidden sm:flex ml-2"
-                  >
-                    Logout
-                  </button>
                 </>
               ) : (
                 <div className="flex gap-2">
-                  <NavLink to="/login" className="btn btn-sm btn-ghost">Login</NavLink>
-                  <NavLink to="/register" className="btn btn-sm btn-ghost">Register</NavLink>
+                  <NavLink to="/login" className="btn btn-sm btn-ghost">
+                    Login
+                  </NavLink>
+                  <NavLink to="/register" className="btn btn-sm btn-ghost">
+                    Register
+                  </NavLink>
                 </div>
               )}
             </div>

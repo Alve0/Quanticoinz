@@ -35,11 +35,7 @@ const TaskList = () => {
     }
   }, [error]);
 
-  if (isLoading) {
-    return (
-      <Loading />
-    );
-  }
+  if (isLoading) return <Loading />;
 
   if (!user) {
     return (
@@ -70,32 +66,48 @@ const TaskList = () => {
       {tasks.length === 0 ? (
         <div className="text-center text-gray-500">No tasks available</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tasks.map((task) => (
             <div
               key={task._id}
-              className="card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow"
+              className="card bg-base-100 shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300"
             >
+              {/* Image */}
+              <figure className="h-48 w-full overflow-hidden rounded-t-2xl">
+                <img
+                  src={task.task_image}
+                  alt={task.task_title}
+                  className="h-full w-full object-cover"
+                />
+              </figure>
+
+              {/* Content */}
               <div className="card-body">
-                <h2 className="card-title text-xl font-semibold">
+                <h2 className="card-title text-xl font-semibold line-clamp-1">
                   {task.task_title}
                 </h2>
-                <p>
-                  <strong>Buyer:</strong> {task.user_email}
-                </p>
-                <p>
-                  <strong>Completion Date:</strong>{" "}
-                  {new Date(task.completion_date).toLocaleDateString()}
-                </p>
-                <p>
-                  <strong>Payable Amount:</strong> {task.payable_amount} Coins
-                </p>
-                <p>
-                  <strong>Workers Needed:</strong> {task.required_workers}
-                </p>
-                <div className="card-actions justify-end">
+                <p className="text-gray-600 line-clamp-2">{task.task_detail}</p>
+
+                <div className="mt-2 space-y-1 text-sm">
+                  <p>
+                    <strong>Buyer:</strong> {task.user_email}
+                  </p>
+                  <p>
+                    <strong>Completion Date:</strong>{" "}
+                    {new Date(task.completion_date).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Payable:</strong> 💰 {task.payable_amount} Coins
+                  </p>
+                  <p>
+                    <strong>Workers Needed:</strong> 👥 {task.required_workers}
+                  </p>
+                </div>
+
+                {/* Action */}
+                <div className="card-actions justify-end mt-4">
                   <button
-                    className="btn btn-primary"
+                    className="btn btn-primary btn-sm rounded-full"
                     onClick={() => handleClick(task)}
                   >
                     View Details

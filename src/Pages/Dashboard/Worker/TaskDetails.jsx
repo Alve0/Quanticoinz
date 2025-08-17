@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaArrowLeft, FaTasks, FaPaperPlane } from "react-icons/fa";
-import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
 import Loading from "../../Loading/Loading";
@@ -27,7 +26,7 @@ const TaskDetails = () => {
       return response.data;
     },
     enabled: !!user,
-    retry: false, // Disable retries to handle 404 explicitly
+    retry: false,
   });
 
   const submitTaskMutation = useMutation({
@@ -68,11 +67,7 @@ const TaskDetails = () => {
     submitTaskMutation.mutate();
   };
 
-  if (isLoading) {
-    return (
-      <Loading />
-    );
-  }
+  if (isLoading) return <Loading />;
 
   if (error) {
     return (
@@ -121,6 +116,7 @@ const TaskDetails = () => {
 
   return (
     <div className="container mx-auto p-4">
+      {/* Back Button */}
       <button
         className="btn btn-outline mb-6 flex items-center gap-2"
         onClick={() => navigate("/Dashboard/tasklist")}
@@ -128,13 +124,15 @@ const TaskDetails = () => {
         <FaArrowLeft /> Back to Task List
       </button>
 
-      <div className="card bg-white shadow-xl rounded-lg mb-8 p-6">
+      {/* Task Details */}
+      <div className="card bg-white shadow-2xl rounded-xl mb-8 p-6 border border-gray-100">
         <h2 className="text-2xl font-bold text-primary mb-4 flex items-center gap-2">
           <FaTasks /> Task Details
         </h2>
 
+        {/* Info Grid */}
         <div className="grid md:grid-cols-2 gap-6">
-          <div>
+          <div className="space-y-2">
             <p>
               <span className="font-semibold">Title:</span> {task.task_title}
             </p>
@@ -153,23 +151,23 @@ const TaskDetails = () => {
               {new Date(task.created_at).toLocaleString()}
             </p>
           </div>
-          <div>
+          <div className="space-y-2">
             <p>
               <span className="font-semibold">Payable Amount:</span>{" "}
               <span className="badge badge-success">
-                {task.payable_amount} Coins
+                💰 {task.payable_amount} Coins
               </span>
             </p>
             <p>
               <span className="font-semibold">Total Amount:</span>{" "}
               <span className="badge badge-info">
-                {task.total_amount} Coins
+                💰 {task.total_amount} Coins
               </span>
             </p>
             <p>
               <span className="font-semibold">Workers Needed:</span>{" "}
               <span className="badge badge-warning">
-                {task.required_workers}
+                👥 {task.required_workers}
               </span>
             </p>
             <p>
@@ -185,29 +183,42 @@ const TaskDetails = () => {
           </div>
         </div>
 
+        {/* Description */}
         <div className="divider mt-6 mb-4">Task Description</div>
-        <p className="mb-4">{task.task_detail}</p>
+        <p className="mb-4 text-gray-700">{task.task_detail}</p>
 
+        {/* Submission Instructions */}
+        {task.submission_info && (
+          <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-4 mb-6 shadow-sm">
+            <h4 className="font-semibold mb-2 text-blue-700">
+              📌 Submission Instructions
+            </h4>
+            <p className="text-gray-800">{task.submission_info}</p>
+          </div>
+        )}
+
+        {/* Task Image */}
         {task.task_image && (
           <div className="mt-6 flex justify-center">
             <img
               src={task.task_image}
               alt="Task"
-              className="w-full max-w-md rounded-lg border shadow"
+              className="w-full max-w-md rounded-lg border shadow-lg"
             />
           </div>
         )}
       </div>
 
-      <div className="card bg-white shadow-lg rounded-lg p-6">
+      {/* Submission Form */}
+      <div className="card bg-white shadow-xl rounded-xl p-6 border border-gray-100">
         <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-          <FaPaperPlane /> Submit Your Work
+          <FaPaperPlane className="text-primary" /> Submit Your Work
         </h3>
         <form onSubmit={handleSubmit}>
           <div className="form-control">
             <label className="label font-semibold">Submission Details</label>
             <textarea
-              className="textarea textarea-bordered h-28"
+              className="textarea textarea-bordered h-28 rounded-lg"
               placeholder="Enter your submission details (e.g., screenshot link, description)"
               value={submissionDetails}
               onChange={(e) => setSubmissionDetails(e.target.value)}
@@ -217,14 +228,16 @@ const TaskDetails = () => {
           <div className="mt-4 text-right">
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary px-6 rounded-full shadow-md hover:shadow-lg"
               disabled={
                 submitTaskMutation.isLoading ||
                 task.status !== "pending" ||
                 task.required_workers <= 0
               }
             >
-              {submitTaskMutation.isLoading ? "Submitting..." : "Submit Task"}
+              {submitTaskMutation.isLoading
+                ? "Submitting..."
+                : "🚀 Submit Task"}
             </button>
           </div>
         </form>
