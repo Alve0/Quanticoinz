@@ -9,6 +9,7 @@ import HowItWorks from "../HowItWorks";
 import BestWorkers from "../BestWorkers";
 import Loading from "../../Loading/Loading";
 import { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -25,14 +26,15 @@ function Home() {
   }
 
   return (
-    <>
+    <div>
+      <ToastContainer />
       <Banner />
       <Spacillity />
       <BestWorkers />
       <VibeCode />
       <TestimonialSection />
       <HowItWorks />
-    </>
+    </div>
   );
 }
 

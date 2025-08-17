@@ -1,14 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, Navigate, NavLink } from "react-router-dom";
 import { AuthContext } from "../../../Provider/AuthProvider";
 import useAxiosSecure from "../../../Provider/useAxiosSecure";
 import { PiCoinsFill } from "react-icons/pi";
-
+import Loading from "../../../Pages/Loading/Loading";
+import { motion } from "motion/react";
 const Navber = () => {
   const { user, signout, setUser } = useContext(AuthContext);
   const axiosscure = useAxiosSecure();
   const [coin, setCoin] = useState(null);
   const [role, setRole] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCoin = async () => {
@@ -17,7 +19,9 @@ const Navber = () => {
           const res = await axiosscure.get(`/users/${user?.email}`);
           setCoin(res.data.coin);
           setRole(res.data.role);
+          setLoading(false);
         }
+        setLoading(false);
       } catch (err) {
         console.error("Error fetching user data", err);
       }
@@ -46,13 +50,17 @@ const Navber = () => {
         return "/";
     }
   };
-
+  // Navigation items
   const navItems = (
     <>
       <NavLink
         to="/"
         className={({ isActive }) =>
-          `px-2 ${isActive ? "text-lime-600 font-semibold" : "hover:text-lime-600"}`
+          `px-2 ${
+            isActive
+              ? "text-white bg-[#727D73] rounded-lg  font-semibold"
+              : "hover:text-lime-600"
+          }`
         }
       >
         Home
@@ -61,14 +69,33 @@ const Navber = () => {
       <NavLink
         to={getDashboardUrl()}
         className={({ isActive }) =>
-          `px-2 ${isActive ? "text-lime-600 font-semibold" : "hover:text-lime-600"}`
+          `px-2 ${
+            isActive ? "text-lime-600 font-semibold" : "hover:text-[#727D73]"
+          }`
         }
       >
         Dashboard
       </NavLink>
     </>
   );
+  // If loading, show the Loading component
+  if (loading) {
+    return <Loading />;
+  }
 
+  // if user is logged in, redirect to their dashboard based on role
+  if (role) {
+    switch (role) {
+      case "buyer":
+        return <Navigate to="/Dashboard/buyerstats" replace />;
+      case "worker":
+        return <Navigate to="/Dashboard/workerstats" replace />;
+      case "admin":
+        return <Navigate to="/Dashboard/adminsummary" replace />;
+      default:
+        return <Navigate to="/" replace />;
+    }
+  }
   return (
     <div className="sticky top-0 z-50 bg-base-100 shadow-sm">
       <div className="navbar max-w-7xl mx-auto px-4">
@@ -84,7 +111,12 @@ const Navber = () => {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               </svg>
             </div>
 
@@ -96,7 +128,9 @@ const Navber = () => {
               {user && (
                 <>
                   <li>{navItems}</li>
-                  <li><hr className="my-1" /></li>
+                  <li>
+                    <hr className="my-1" />
+                  </li>
                 </>
               )}
 
@@ -114,9 +148,9 @@ const Navber = () => {
           </div>
 
           {/* Logo */}
-          <Link to="/" className="font-bold ml-2 text-2xl text-lime-600">
+          <a href="/" className="font-bold ml-2 text-2xl ">
             Quanticoinz
-          </Link>
+          </a>
         </div>
 
         {/* CENTER (desktop) */}
@@ -125,16 +159,18 @@ const Navber = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="navbar-end flex items-center gap-3">
+        <div className="navbar-end flex items-center gap-2">
           {/* Join as Developer — desktop only */}
-          <a
+          <motion.a
+            transition={{ duration: 0.2 }}
+            whileHover={{ scale: 1.1 }}
             href="https://github.com/Alveom/Assinginment12-Clintside.git"
             target="_blank"
             rel="noreferrer"
-            className="btn border-lime-500 text-lime-600 hover:bg-lime-500 hover:text-white font-semibold hidden lg:inline-flex"
+            className="btn border-[#727D73]  hover:bg-[#727D73] hover:text-white font-semibold hidden lg:inline-flex"
           >
             Join as Developer
-          </a>
+          </motion.a>
 
           {user ? (
             <>
@@ -147,9 +183,9 @@ const Navber = () => {
               {/* Profile dropdown */}
               <div className="dropdown dropdown-end">
                 <div tabIndex={0} role="button" className="avatar">
-                  <div className="w-10 sm:w-12 rounded-full border-2 border-lime-500">
+                  <div className="w-10 sm:w-12 rounded-full ">
                     <img
-                      src={user?.photoURL || "https://i.ibb.co/MBtjqXQ/user.png"}
+                      src={user?.photoURL}
                       alt="User profile"
                       loading="lazy"
                     />
@@ -171,14 +207,22 @@ const Navber = () => {
           ) : (
             <div className="flex gap-2">
               <Link to="/log-reg/login">
-                <button className="btn border-2 border-lime-500 hover:bg-lime-500 hover:text-white font-bold w-20">
+                <motion.button
+                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.1 }}
+                  className="btn border-1 bg-none border-[#727D73] ease-in hover:bg-[#727D73]  hover:text-white font-bold "
+                >
                   Login
-                </button>
+                </motion.button>
               </Link>
               <Link to="/log-reg/register">
-                <button className="btn bg-lime-500 hover:bg-lime-600 text-white font-bold border-none w-20">
+                <motion.button
+                  transition={{ duration: 0.2 }}
+                  whileHover={{ scale: 1.1 }}
+                  className="btn border-1 bg-[#727D73] hover:bg-[#525a53] text-white font-bold  "
+                >
                   Join
-                </button>
+                </motion.button>
               </Link>
             </div>
           )}

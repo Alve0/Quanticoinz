@@ -154,7 +154,7 @@ function Login() {
 
             <button
               type="submit"
-              className="btn mt-3 btn-primary w-full bg-lime-600 border-none"
+              className="btn mt-3 btn-primary w-full bg-[#727D73] hover:bg-[#565f57] border-none"
             >
               Login
             </button>

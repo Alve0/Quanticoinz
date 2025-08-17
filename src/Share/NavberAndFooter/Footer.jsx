@@ -1,24 +1,35 @@
 import React from "react";
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 const Footer = () => {
+  const Subscrib = (e) => {
+    e.preventDefault();
+    toast.success("Subscribed successfully!");
+    console.log("Subscribed successfully!");
+  };
+
   return (
-    <footer className="bg-lime-600/90 text-white p-8 mt-8">
+    <footer className="bg-[#727D73] text-white p-8 mt-8">
       <div className="container mx-auto text-center">
         <div className="mb-6">
           <h3 className="text-2xl font-semibold mb-2">Stay Updated</h3>
-          <p className="mb-4">
+          <p className="mb-4 ">
             Subscribe to our newsletter for the latest updates.
           </p>
           <div className="flex justify-center">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="bg-white text-gray-800 rounded-l-full py-2 px-4 w-64 focus:outline-none"
-            />
-            <button className="bg-gray-800 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-r-full">
-              Subscribe
-            </button>
+            <form onSubmit={Subscrib} className="flex">
+              {" "}
+              <input
+                type="email"
+                required
+                placeholder="Enter your email"
+                className="bg-white text-[#727D73] rounded-l-full py-2 px-4 w-64 focus:outline-none"
+              />
+              <button className="bg-[#AAB99A] hover:bg-[#79856d] text-[#3f443f] font-bold py-2 px-4 rounded-r-full">
+                Subscribe
+              </button>
+            </form>
           </div>
         </div>
         <div className="flex justify-center space-x-6 mb-4">

@@ -1,18 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { IoReorderThreeSharp, IoNotifications } from "react-icons/io5";
-import { NavLink, Link } from "react-router-dom";
+import { IoReorderThreeSharp, IoNotifications, IoNotificationsOutline } from "react-icons/io5";
+import { NavLink, Link, Outlet } from "react-router-dom";
 import { PiCoinsFill } from "react-icons/pi";
 import { AuthContext } from "../../Provider/AuthProvider";
 import useAxiosSecure from "../../Provider/useAxiosSecure";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Notifications from "./Notifications";
-import { Outlet } from "react-router";
 
 function DashboardNavber() {
-  const { user } = useContext(AuthContext);
+  const { user, signout } = useContext(AuthContext);
   const axiosSecure = useAxiosSecure();
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
+  const [hasNewNotification, setHasNewNotification] = useState(false);
 
   const { data: userData } = useQuery({
     queryKey: ["userData", user?.email],
@@ -23,75 +24,74 @@ function DashboardNavber() {
     },
   });
 
+  // Poll notifications every 10s
+  useEffect(() => {
+    let interval;
+    if (user?.email) {
+      interval = setInterval(async () => {
+        try {
+          const res = await axiosSecure.get(`/notifications/${user.email}`);
+          if (res.data?.hasNew) {
+            setHasNewNotification(true);
+          }
+        } catch (err) {
+          console.error("Error fetching notifications", err);
+        }
+      }, 10000);
+    }
+    return () => clearInterval(interval);
+  }, [user, axiosSecure]);
+
+  const handleNotificationClick = () => {
+    setIsNotificationOpen(!isNotificationOpen);
+    if (!isNotificationOpen) {
+      setHasNewNotification(false);
+      if (user?.email) {
+        axiosSecure.post(`/notifications/mark-seen/${user.email}`).catch(() => {});
+      }
+    }
+  };
+
+  const handleLogout = () => {
+    signout()
+      .then(() => {
+        toast.success("Logged out successfully");
+      })
+      .catch((error) => {
+        console.error("Logout error:", error);
+        toast.error("Logout failed");
+      });
+  };
+
   const navigation = (
     <>
       {userData?.role === "admin" && (
         <>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/adminsummary">Admin Summary</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/adminwithdrawals">
-              Worker Withdraw Request
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/manageusers">Manage Users</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/adminmanagetasks">
-              Admin Manage Tasks
-            </NavLink>
-          </li>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/Dashboard/adminsummary">Admin Summary</NavLink></li>
+          <li><NavLink to="/Dashboard/adminwithdrawals">Worker Withdraw Request</NavLink></li>
+          <li><NavLink to="/Dashboard/manageusers">Manage Users</NavLink></li>
+          <li><NavLink to="/Dashboard/adminmanagetasks">Admin Manage Tasks</NavLink></li>
         </>
       )}
       {userData?.role === "worker" && (
         <>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/workerstats">Worker Stats</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/approvedsubmissions">
-              Approved Submissions
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/tasklist">Task List</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/withdrawform">Withdraw Form</NavLink>
-          </li>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/Dashboard/workerstats">Worker Stats</NavLink></li>
+          <li><NavLink to="/Dashboard/approvedsubmissions">Approved Submissions</NavLink></li>
+          <li><NavLink to="/Dashboard/tasklist">Task List</NavLink></li>
+          <li><NavLink to="/Dashboard/withdrawform">Withdraw Form</NavLink></li>
         </>
       )}
       {userData?.role === "buyer" && (
         <>
-          <li>
-            <NavLink to="/">Home</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/buyerstats">Buyer Stats</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/addtask">Add Task</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/mytask">My Task</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/purchasecoin">Purchase Coin</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/paymenthistory">Payment History</NavLink>
-          </li>
-          <li>
-            <NavLink to="/Dashboard/taskreview">Task Review</NavLink>
-          </li>
+          <li><NavLink to="/">Home</NavLink></li>
+          <li><NavLink to="/Dashboard/buyerstats">Buyer Stats</NavLink></li>
+          <li><NavLink to="/Dashboard/addtask">Add Task</NavLink></li>
+          <li><NavLink to="/Dashboard/mytask">My Task</NavLink></li>
+          <li><NavLink to="/Dashboard/purchasecoin">Purchase Coin</NavLink></li>
+          <li><NavLink to="/Dashboard/paymenthistory">Payment History</NavLink></li>
+          <li><NavLink to="/Dashboard/taskreview">Task Review</NavLink></li>
         </>
       )}
       <li className="mt-4">
@@ -103,6 +103,16 @@ function DashboardNavber() {
           Join as Developer
         </a>
       </li>
+      {user && (
+        <li className="mt-4">
+          <button
+            onClick={handleLogout}
+            className="btn btn-sm btn-error text-white w-full"
+          >
+            Logout
+          </button>
+        </li>
+      )}
     </>
   );
 
@@ -111,7 +121,7 @@ function DashboardNavber() {
       <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Top Navbar */}
-        <div className="w-full navbar bg-base-100 px-4 shadow-md">
+        <div className="w-full navbar bg-base-100 px-4 shadow-md sticky top-0 z-40">
           <div className="flex-none lg:hidden">
             <label
               htmlFor="my-drawer-2"
@@ -124,17 +134,15 @@ function DashboardNavber() {
 
           <div className="flex justify-between items-center w-full">
             <div className="navbar-start flex items-center gap-6">
-              <Link to="/" className="text-xl font-bold">
+              <Link to="/" className="text-xl font-bold text-lime-600">
                 quanticoinz
               </Link>
 
               {user && (
                 <div className="flex items-center gap-2 ml-4">
-                  <span>Available Coin:</span>
+                  <span className="hidden sm:inline">Available Coin:</span>
                   <PiCoinsFill size={20} />
-                  <span className="font-bold ml-1">
-                    {userData?.coin || "0"}
-                  </span>
+                  <span className="font-bold ml-1">{userData?.coin || "0"}</span>
                 </div>
               )}
             </div>
@@ -144,7 +152,7 @@ function DashboardNavber() {
                 href="https://github.com/Alveom/Assinginment12-Clintside.git"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn btn-outline btn-sm"
+                className="btn btn-outline btn-sm hidden sm:flex"
               >
                 Join as Developer
               </a>
@@ -152,30 +160,39 @@ function DashboardNavber() {
               {user ? (
                 <>
                   <button
-                    className="btn btn-ghost btn-circle"
-                    onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+                    className="btn btn-ghost btn-circle relative"
+                    onClick={handleNotificationClick}
                   >
-                    <IoNotifications className="text-2xl" />
+                    {hasNewNotification ? (
+                      <IoNotifications className="text-2xl text-red-500" />
+                    ) : (
+                      <IoNotificationsOutline className="text-2xl" />
+                    )}
+                    {hasNewNotification && (
+                      <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+                    )}
                   </button>
                   <div className="text-right hidden sm:block">
-                    <h3>{userData?.role || "User"}</h3>
-                    <h3>{user.displayName || "No name"}</h3>
+                    <h3 className="font-semibold">{userData?.role || "User"}</h3>
+                    <h3 className="text-sm text-gray-500">{user.displayName || "No name"}</h3>
                   </div>
                   <img
                     src={user.photoURL || "/default-avatar.png"}
                     alt={user.displayName || "User"}
-                    className="w-10 h-10 rounded-full"
+                    className="w-10 h-10 rounded-full border border-gray-300"
                   />
+                  <button
+                    onClick={handleLogout}
+                    className="btn btn-sm btn-error text-white hidden sm:flex ml-2"
+                  >
+                    Logout
+                  </button>
                 </>
               ) : (
-                <>
-                  <NavLink to="/login" className="btn btn-sm btn-ghost">
-                    Login
-                  </NavLink>
-                  <NavLink to="/register" className="btn btn-sm btn-ghost">
-                    Register
-                  </NavLink>
-                </>
+                <div className="flex gap-2">
+                  <NavLink to="/login" className="btn btn-sm btn-ghost">Login</NavLink>
+                  <NavLink to="/register" className="btn btn-sm btn-ghost">Register</NavLink>
+                </div>
               )}
             </div>
           </div>

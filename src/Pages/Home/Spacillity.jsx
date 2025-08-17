@@ -53,7 +53,7 @@ const specialties = [
 
 function Specialty() {
   return (
-    <div className="bg-gray-100 p-4">
+    <div className=" p-4">
       <div className="flex flex-row flex-wrap gap-5 w-full max-w-8xl mx-auto justify-center">
         {specialties.map((specialty, index) => (
           <ListCards key={index} icons={specialty.icon} name={specialty.name} />

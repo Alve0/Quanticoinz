@@ -37,7 +37,7 @@ const BestWorkers = () => {
         {workers.map((worker, index) => (
           <div
             key={index}
-            className="card shadow-md p-4 bg-base-100 rounded-xl flex items-center gap-4"
+            className="card bg-[#D0DDD0] shadow-md p-4 rounded-xl flex items-center gap-4"
           >
             <img
               src={worker.photoURL || "/default-avatar.png"}

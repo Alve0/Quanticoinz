@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { motion } from "framer-motion";
 import bgVideo from "../../Assets/Banner.mp4";
+import { Link, Navigate, useNavigate } from "react-router";
 
 function Banner() {
   const [scrollY, setScrollY] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -14,6 +16,10 @@ function Banner() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const Navigation = () => {
+    navigate("/log-reg/register");
+  };
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -44,24 +50,27 @@ function Banner() {
           Our freelancers <br /> will take it from here
         </motion.h3>
 
-        {/* Search Box */}
-        <motion.div
-          className="relative mt-5 w-full max-w-md sm:max-w-lg"
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
+        {/* join us btn  */}
+        <motion.button
+          className="flex items-center gap-2 px-6 py-2 rounded-lg font-semibold text-white cursor-pointer overflow-hidden"
+          initial={{ width: 140, backgroundColor: "#727D73" }}
+          whileHover={{
+            width: 180,
+            backgroundColor: "#727D73",
+            transition: { type: "spring", stiffness: 300, damping: 20 },
+          }}
+          onClick={() => Navigation()}
         >
-          <input
-            type="text"
-            placeholder="Search for any service..."
-            className="bg-white text-gray-900 rounded-lg w-full h-12 sm:h-14 p-4 pr-12 font-semibold border-none focus:outline-none"
-          />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                        <div className="bg-black p-2 rounded-lg hover:text-2xl transition-all duration-300 ease-in-out hover:bg-lime-600">
-              <FaSearch className="text-white" />
-            </div>
-          </div>
-        </motion.div>
+          <span>Join us</span>
+          <motion.span
+            className="ml-2 text-white"
+            initial={{ opacity: 0, x: -5 }}
+            whileHover={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            ➔
+          </motion.span>
+        </motion.button>
       </motion.div>
     </div>
   );

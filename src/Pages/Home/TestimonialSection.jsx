@@ -56,7 +56,7 @@ const testimonials = [
 
 const TestimonialSection = () => {
   return (
-    <section className="py-16 bg-base-200">
+    <section className="py-16 ">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold mb-10">What Our Users Say</h2>
         <Swiper
@@ -79,13 +79,13 @@ const TestimonialSection = () => {
         >
           {testimonials.map((t, index) => (
             <SwiperSlide key={index}>
-              <div className="bg-gray-200 p-6 rounded-xl shadow-lg h-full flex flex-col items-center text-center">
+              <div className="bg-[#D0DDD0] p-6 rounded-xl shadow-lg h-full flex flex-col items-center text-center">
                 <img
                   src={t.image}
                   alt={t.name}
-                  className="w-20 h-20 mb-4 rounded-full object-cover ring ring-primary ring-offset-base-100 ring-offset-2"
+                  className="w-20 h-20 mb-4 rounded-full object-cover ring ring-[#727D73] ring-offset-2"
                 />
-                <FaQuoteLeft className="text-primary text-2xl mb-2" />
+                <FaQuoteLeft className=" text-[#727D73] text-2xl mb-2" />
                 <p className="text-base italic mb-4">"{t.quote}"</p>
                 <h4 className="font-bold text-lg">{t.name}</h4>
               </div>

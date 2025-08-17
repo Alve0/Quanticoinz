@@ -58,7 +58,19 @@ function Register() {
       await useaxios.post("/users", userDoc);
 
       toast.success("Registration successful!");
-      navigate("/");
+      if (role) {
+        switch (role) {
+          case "buyer":
+            return <Navigate to="/Dashboard/buyerstats" replace />;
+          case "worker":
+            return <Navigate to="/Dashboard/workerstats" replace />;
+          case "admin":
+            return <Navigate to="/Dashboard/adminsummary" replace />;
+
+          default:
+            return <Navigate to="/" replace />;
+        }
+      }
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -189,7 +201,7 @@ function Register() {
             </div>
             <button
               type="submit"
-              className="w-full bg-lime-600 text-white py-2 rounded-md hover:bg-lime-700"
+              className="w-full bg-[#727D73] text-white py-2 rounded-md hover:bg-[#565f57]"
             >
               Register
             </button>
